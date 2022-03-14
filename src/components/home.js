@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { Link } from "react-router-dom";
 
 class Timer extends Component {
   constructor(props) {
@@ -9,10 +10,10 @@ class Timer extends Component {
   }
 
   componentDidMount() {
-     test();
+    test();
 
     async function test() {
-   await   fetch("https://web-project-backend.vincentmichael.repl.co/users")
+      await fetch("https://web-project-backend.vincentmichael.repl.co/users")
         .then(res => res.json())
         .then(
           (result) => {
@@ -30,10 +31,10 @@ class Timer extends Component {
   }
 
   render() {
-    return (
+    return ( 
       <div>
         {this.state.username}
-      </div>
+      </div>  
     );
   }
 }
