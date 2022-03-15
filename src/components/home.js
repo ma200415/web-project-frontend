@@ -1,7 +1,6 @@
 import { Component } from 'react';
-import { Link } from "react-router-dom";
 
-class Timer extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,30 +12,18 @@ class Timer extends Component {
     test();
 
     async function test() {
-      await fetch("https://web-project-backend.vincentmichael.repl.co/users")
-        .then(res => res.json())
-        .then(
-          (result) => {
-            console.log(result[0].username);
 
-            this.setState({
-              username: result.username
-            });
-          },
-          (error) => {
-            console.log(error);
-          }
-        )
     }
   }
 
   render() {
-    return ( 
+    return (
       <div>
-        {this.state.username}
-      </div>  
+        {/* {this.state.username} */}
+        Hello
+      </div>
     );
   }
 }
 
-export default Timer
+export default Home
