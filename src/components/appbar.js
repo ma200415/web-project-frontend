@@ -12,8 +12,22 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import { Link } from "react-router-dom";
+
+const pages = [
+  { name: 'Home', to: '' },
+  { name: 'About', to: 'about' }
+];
+const guestSettings = [
+  { name: 'Sign In', to: 'signin' },
+  { name: 'Sign up', to: 'signup' }
+];
+const signInSettings = [
+  { name: 'Profile', to: 'profile' },
+  { name: 'Account', to: 'account' },
+  { name: 'Dashboard', to: 'dashboard' },
+  { name: 'Logout', to: 'logout' }
+];
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -77,8 +91,15 @@ const ResponsiveAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem
+                  key={page.name}
+                  component={Link}
+                  to={page.to}
+                  onClick={handleCloseNavMenu}
+                >
+                  <Typography textAlign="center">
+                    {page.name}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -94,11 +115,13 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.name}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
+                component={Link}
+                to={page.to}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
           </Box>
@@ -125,9 +148,16 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {('1' === 1 ? signInSettings : guestSettings).map((setting) => (
+                <MenuItem
+                  key={setting.name}
+                  component={Link}
+                  to={setting.to}
+                  onClick={handleCloseUserMenu}
+                >
+                  <Typography textAlign="center">
+                    {setting.name}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
