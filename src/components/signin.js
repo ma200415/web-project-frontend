@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -20,11 +20,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { signin } from '../helpers/WebAPI'
 import { setAuthToken } from '../helpers/utils'
+import { AuthContext } from "../contexts"
 
 const theme = createTheme();
 
 export default function SignIn() {
-  const [errorMessage, setErrorMessage] = React.useState({});
+  const [errorMessage, setErrorMessage] = useState({});
+  const { setUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -57,6 +59,7 @@ export default function SignIn() {
 
       if (result.success && result.authToken) {
         setAuthToken(result.authToken)
+        setUser(signInUser); //todo don't store password
 
         navigate('/');
       } else {

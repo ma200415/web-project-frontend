@@ -1,29 +1,12 @@
-import { Component } from 'react';
+import { useContext } from 'react';
+import { AuthContext } from "../contexts"
 
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: null
-    };
-  }
+export default function Home() {
+  const { user } = useContext(AuthContext);
 
-  componentDidMount() {
-    test();
-
-    async function test() {
-
-    }
-  }
-
-  render() {
-    return (
-      <div>
-        {/* {this.state.username} */}
-        Hello
-      </div>
-    );
-  }
+  return (
+    <div>
+      {"Hi " + (user && user.email)}
+    </div>
+  )
 }
-
-export default Home

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,7 +13,8 @@ import MenuItem from '@mui/material/MenuItem';
 
 import { Link } from "react-router-dom";
 
-import { getAuthToken } from "../helpers/utils"
+import { AuthContext } from "../contexts"
+import { setAuthToken } from '../helpers/utils';
 
 const pages = [
   { name: 'Home', to: '' },
@@ -23,16 +24,16 @@ const guestSettings = [
   { name: 'Sign In', to: 'signin' },
   { name: 'Sign up', to: 'signup' }
 ];
-const signInSettings = [
+const userSettings = [
   { name: 'Profile', to: 'profile' },
   { name: 'Account', to: 'account' },
   { name: 'Dashboard', to: 'dashboard' },
-  { name: 'Logout', to: 'logout' }
 ];
 
-const ResponsiveAppBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+export default function ResponsiveAppBar() {
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const { user, setUser } = useContext(AuthContext);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -49,7 +50,12 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
-  const authToken = getAuthToken() //todo need to verify
+  const handleLogout = () => {
+    setAuthToken(null)
+    setUser(null)
+
+    setAnchorElUser(null);
+  }
 
   return (
     <AppBar position="static">
@@ -130,11 +136,9 @@ const ResponsiveAppBar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar />
+            </IconButton>
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
@@ -151,7 +155,7 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {('1' === 1 ? signInSettings : guestSettings).map((setting) => (
+              {(user ? userSettings : guestSettings).map((setting) => (
                 <MenuItem
                   key={setting.name}
                   component={Link}
@@ -163,6 +167,14 @@ const ResponsiveAppBar = () => {
                   </Typography>
                 </MenuItem>
               ))}
+              {(user &&
+                <MenuItem
+                  onClick={handleLogout}
+                >
+                  <Typography textAlign="center">
+                    Logout
+                  </Typography>
+                </MenuItem>)}
             </Menu>
           </Box>
         </Toolbar>
@@ -170,4 +182,3 @@ const ResponsiveAppBar = () => {
     </AppBar>
   );
 };
-export default ResponsiveAppBar;
