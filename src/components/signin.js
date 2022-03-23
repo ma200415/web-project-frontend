@@ -48,15 +48,15 @@ export default function SignIn() {
     }
 
     try {
-      const result = await signin(signInUser) //todo handle security      
+      const result = await signin(signInUser)
 
       if (!result) {
         setErrorMessage({ errorType: "error", message: "Network error" });
         return;
       }
 
-      if (result.success) {
-        setAuthToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIwMSIsInVzZXJJZCI6MSwiaWF0IjoxNjA3NzQzMTA5fQ.FgTlsa57WOYNZEBj5HtL74uIVDuKFWErrmQ72qXuHmo")
+      if (result.success && result.authToken) {
+        setAuthToken(result.authToken)
 
         navigate('/');
       } else {

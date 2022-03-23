@@ -1,4 +1,5 @@
 import Config from '../config.json'
+import { getAuthToken } from '../helpers/utils'
 
 export const signin = async (data = {}) => {
     return await fetch(`${Config.BASE_URL}/signin`, {
@@ -10,7 +11,7 @@ export const signin = async (data = {}) => {
         body: JSON.stringify(data),
     }).then(
         (res) => res.json(),
-        (error) => { console.log(error) }
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
     );
 };
 
@@ -24,6 +25,20 @@ export const signup = async (data = {}) => {
         body: JSON.stringify(data),
     }).then(
         (res) => res.json(),
-        (error) => { console.log(error) }
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
+export const getDecodedAuthToken = async () => {
+    return await fetch(`${Config.BASE_URL}/auth`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getAuthToken()}`,
+        }
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
     );
 };
