@@ -35,11 +35,14 @@ export default function SignIn() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const result = await signin({
+    const signInUser = {
       email: data.get('email'),
       password: data.get('password')
-    })
-    console.log(result[0].username)
+    };
+
+    const result = await signin(signInUser)
+
+    console.log(result)
   };
 
   return (

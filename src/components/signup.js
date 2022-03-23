@@ -12,16 +12,25 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { signup } from '../helpers/WebAPI'
+
 const theme = createTheme();
 
 export default function Register() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    const signUpUser = {
+      lastName: data.get('lastName'),
+      firstName: data.get('firstName'),
       email: data.get('email'),
-      password: data.get('password'),
-    });
+      password: data.get('password')
+    };
+
+    const result = await signup(signUpUser)
+
+    console.log(result)
   };
 
   return (
