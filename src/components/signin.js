@@ -14,16 +14,19 @@ import Container from '@mui/material/Container';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-import { Link as RouterLink, Navigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { signin } from '../helpers/WebAPI'
+import { setAuthToken } from '../helpers/utils'
 
 const theme = createTheme();
 
 export default function SignIn() {
-  const [loginResult, setLoginResult] = React.useState({});
+  const [errorMessage, setErrorMessage] = React.useState({});
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -35,11 +38,11 @@ export default function SignIn() {
     };
 
     if (!signInUser.email) {
-      setLoginResult({ errorType: "email", message: "Required*" })
+      setErrorMessage({ errorType: "email", message: "Required*" })
 
       return;
     } else if (!signInUser.password) {
-      setLoginResult({ errorType: "password", message: "Required*" })
+      setErrorMessage({ errorType: "password", message: "Required*" })
 
       return;
     }
@@ -47,19 +50,29 @@ export default function SignIn() {
     try {
       const result = await signin(signInUser) //todo handle security      
 
-      setLoginResult(result);
+      if (!result) {
+        setErrorMessage({ errorType: "error", message: "Network error" });
+        return;
+      }
+
+      if (result.success) {
+        setAuthToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIwMSIsInVzZXJJZCI6MSwiaWF0IjoxNjA3NzQzMTA5fQ.FgTlsa57WOYNZEBj5HtL74uIVDuKFWErrmQ72qXuHmo")
+
+        navigate('/');
+      } else {
+        setErrorMessage(result);
+      }
     } catch (error) {
-      setLoginResult({ errorType: "error", message: String(error) })
+      setErrorMessage({ errorType: "error", message: String(error) })
     }
   };
 
   const handleSnackbarClose = () => {
-    setLoginResult({})
+    setErrorMessage({})
   };
 
   return (
     <ThemeProvider theme={theme}>
-      {loginResult.success && (<Navigate to="/" replace={true} />)}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -78,8 +91,8 @@ export default function SignIn() {
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
-              error={loginResult.errorType === "email"}
-              helperText={loginResult.errorType === "email" && loginResult.message}
+              error={errorMessage.errorType === "email"}
+              helperText={errorMessage.errorType === "email" && errorMessage.message}
               margin="normal"
               required
               fullWidth
@@ -90,8 +103,8 @@ export default function SignIn() {
               autoFocus
             />
             <TextField
-              error={loginResult.errorType === "password"}
-              helperText={loginResult.errorType === "password" && loginResult.message}
+              error={errorMessage.errorType === "password"}
+              helperText={errorMessage.errorType === "password" && errorMessage.message}
               margin="normal"
               required
               fullWidth
@@ -124,12 +137,12 @@ export default function SignIn() {
         </Box>
       </Container>
       <Snackbar
-        open={loginResult.errorType === "error" || loginResult.success}
+        open={errorMessage.errorType === "error"}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
       >
-        <MuiAlert severity={loginResult.errorType === "error" ? "error" : "success"} sx={{ width: '100%' }}>
-          {loginResult.message}
+        <MuiAlert severity="error" sx={{ width: '100%' }}>
+          {errorMessage.message}
         </MuiAlert>
       </Snackbar>
     </ThemeProvider>
