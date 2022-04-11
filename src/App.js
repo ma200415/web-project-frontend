@@ -7,6 +7,8 @@ import Home from './components/home'
 import SignIn from './components/signin'
 import AppBar from './components/appbar'
 import SignUp from './components/signup'
+import ListDog from './components/dog/list'
+import AddDog from './components/dog/add'
 
 import { AuthContext } from "./contexts";
 import { getAuthToken } from './helpers/utils'
@@ -34,6 +36,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
+          <Route path="/dog/list" element={<ListDog />} />
+          <Route path="/dog/add" element={<AddDog />} />
         </Routes>
       </AuthContext.Provider>
     </div>
