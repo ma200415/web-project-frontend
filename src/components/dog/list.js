@@ -20,7 +20,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-import { listDog, deleteDog } from '../../helpers/WebAPI'
+import { listDog, deleteDog, queryUser } from '../../helpers/WebAPI'
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -44,6 +44,17 @@ export default function ListDog() {
 
   const retrieveDogs = async (dog) => {
     const result = await listDog(dog)
+
+    for (const element of result) {
+      const addByUser = await queryUser({ id: element.addBy })
+      element.addByName = addByUser.firstName + " " + addByUser.lastName
+
+      if (element.editBy) {
+        const editByUser = await queryUser({ id: element.editBy })
+        element.editByName = editByUser.firstName + " " + editByUser.lastName
+      }
+    }
+
     setDogList(result)
   };
 
@@ -173,6 +184,14 @@ export default function ListDog() {
                     {dog.birth && (
                       <Typography>
                         Birth: {dog.birth} ({(new Date().getFullYear() - new Date(dog.birth).getFullYear())})
+                      </Typography>
+                    )}
+                    <Typography>
+                      Created: {dog.addByName} [{new Date(dog.addTimestamp).toLocaleString()}]
+                    </Typography>
+                    {dog.editByName && (
+                      <Typography>
+                        Edited: {dog.editByName} [{new Date(dog.editTimestamp).toLocaleString()}]
                       </Typography>
                     )}
                   </CardContent>
