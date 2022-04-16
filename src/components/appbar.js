@@ -27,13 +27,14 @@ const guestSettings = [
 const userSettings = [
   { name: 'Profile', to: 'profile' },
   { name: 'Account', to: 'account' },
-  { name: 'Dashboard', to: 'dashboard' },
 ];
 
 export default function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { user, setUser } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -55,6 +56,45 @@ export default function ResponsiveAppBar() {
     setUser(null)
 
     setAnchorElUser(null);
+
+    navigate("/")
+  }
+
+  const stringToColor = (string) => {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  }
+
+  const stringAvatar = (orgName) => {
+    const nameSplit = orgName.split(' ')
+
+    var name = nameSplit[0][0]
+
+    if (nameSplit.length > 1) {
+      name += nameSplit[1][0]
+    }
+
+    return {
+      sx: {
+        bgcolor: stringToColor(orgName),
+      },
+      children: name,
+    };
   }
 
   return (
@@ -67,7 +107,7 @@ export default function ResponsiveAppBar() {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            LOGO
+            The Canine Shelter
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -137,7 +177,7 @@ export default function ResponsiveAppBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar />
+              <Avatar {...user && stringAvatar("John")} />
             </IconButton>
             <Menu
               sx={{ mt: '45px' }}
