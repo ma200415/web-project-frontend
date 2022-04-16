@@ -177,7 +177,7 @@ export default function ResponsiveAppBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar {...user && stringAvatar("John")} />
+              <Avatar {...user && stringAvatar(user.firstName + " " + user.lastName)} />
             </IconButton>
             <Menu
               sx={{ mt: '45px' }}
