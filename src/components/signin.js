@@ -21,6 +21,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { signin } from '../helpers/WebAPI'
 import { setAuthToken } from '../helpers/utils'
 import { AuthContext } from "../authContext"
+import { getDecodedAuthToken } from '../helpers/WebAPI'
 
 const theme = createTheme();
 
@@ -59,7 +60,12 @@ export default function SignIn() {
 
       if (result.success && result.authToken) {
         setAuthToken(result.authToken)
-        setUser({ email: result.email, admin: result.admin }); //set JWT payload
+
+        getDecodedAuthToken().then((result) => { //set JWT payload
+          if (result.success) {
+            setUser(result.payload);
+          }
+        });
 
         navigate('/');
       } else {
