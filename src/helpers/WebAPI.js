@@ -34,7 +34,6 @@ export const getDecodedAuthToken = async () => {
         method: "POST",
         cache: 'no-cache',
         headers: {
-            'Content-Type': 'application/json',
             'authorization': `Bearer ${getAuthToken()}`,
         }
     }).then(
@@ -80,6 +79,21 @@ export const listDog = async (data = {}) => {
             'authorization': `Bearer ${getAuthToken()}`,
         },
         body: JSON.stringify(data),
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
+export const deleteDog = async (id = "") => {
+    return await fetch(`${Config.BASE_URL}/dog/delete`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify({ id: id }),
     }).then(
         (res) => res.json(),
         (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
