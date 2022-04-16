@@ -88,37 +88,16 @@ export default function ListDog() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <main>
-        <Box component="form" noValidate onSubmit={handleSearchSubmit} sx={{ mt: 2 }}>
-          <Stack
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            spacing={1}
-          >
-            <TextField id="name" name="name" label="Name" type="search" />
-            <TextField id="breed" name="breed" label="Breed" type="search" />
-            <TextField id="age" name="age" label="Age" type="search" />
-
-            <FormControl>
-              <FormLabel id="genderLabel">Gender</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="genderLabel"
-                name="gender"
-              >
-                <FormControlLabel value="f" control={<Radio />} label="Female" />
-                <FormControlLabel value="m" control={<Radio />} label="Male" />
-              </RadioGroup>
-            </FormControl>
-
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ mt: 1, mb: 2 }}
+        <Container sx={{ py: 2 }} maxWidth="lg">
+          <Box component="form" noValidate onSubmit={handleSearchSubmit} sx={{ mt: 2 }}>
+            <Stack
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              spacing={1}
             >
-              Search
-            </Button>
-            {isAllowAdd() && (
+              <TextField id="name" name="name" label="Name" type="search" />
+              <TextField id="breed" name="breed" label="Breed" type="search" />
               <TextField
                 id="birth"
                 label="Birth"
@@ -128,20 +107,43 @@ export default function ListDog() {
                   shrink: true,
                 }}
               />
+
+              <FormControl>
+                <FormLabel id="genderLabel">Gender</FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="genderLabel"
+                  name="gender"
+                >
+                  <FormControlLabel value="f" control={<Radio />} label="Female" />
+                  <FormControlLabel value="m" control={<Radio />} label="Male" />
+                  <FormControlLabel value='' control={<Radio />} label="N/A" />
+                </RadioGroup>
+              </FormControl>
+
               <Button
-                color="success"
+                type="submit"
                 variant="contained"
                 sx={{ mt: 1, mb: 2 }}
-                component={RouterLink} to="/dog/add"
               >
-                Add
+                Search
               </Button>
-            )}
-          </Stack>
-        </Box>
+              {isAllowAdd() && (
+                <Button
+                  color="success"
+                  variant="contained"
+                  sx={{ mt: 1, mb: 2 }}
+                  component={RouterLink} to="/dog/add"
+                >
+                  Add
+                </Button>
+              )}
+            </Stack>
+          </Box>
+        </Container>
 
-        <Container sx={{ py: 2 }} maxWidth="md">
-          {dogList.length === 0 && "No records found"}
+        <Container sx={{ py: 2 }} maxWidth="lg">
+          {(dogList && dogList.length === 0) && "No records found"}
 
           <Grid container spacing={4}>
             {dogList.map((dog) => (
@@ -151,8 +153,6 @@ export default function ListDog() {
                 >
                   <CardMedia
                     component="img"
-                    image="https://source.unsplash.com/random"
-                    alt="random"
                     src={
                       dog.photo ?
                         `data:image/jpeg;base64, ${dog.photo}`
@@ -165,7 +165,7 @@ export default function ListDog() {
                       {dog.name}
                     </Typography>
                     <Typography>
-                      {(getGender(dog.gender))} ({dog.age})
+                      {(getGender(dog.gender))}
                     </Typography>
                     <Typography>
                       Breed:  {dog.breed}
