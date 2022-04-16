@@ -30,7 +30,15 @@ export default function App() {
 
   const AddDogEl = () => {
     if (user != null) {
-      return (user.admin ? <AddDog /> : "You do not have permisFsion")
+      return (user.admin ? <AddDog /> : "You do not have permission to access")
+    } else {
+      return (<Navigate replace to="/signin" />)
+    }
+  }
+
+  const EditDogEl = () => {
+    if (user != null) {
+      return (<EditDog />)
     } else {
       return (<Navigate replace to="/signin" />)
     }
@@ -47,7 +55,7 @@ export default function App() {
           <Route path="signup" element={<SignUp />} />
           <Route path="/dog/list" element={<ListDog />} />
           <Route path="/dog/add" element={<AddDogEl />} />
-          <Route path="/dog/edit" element={<EditDog />} />
+          <Route path="/dog/edit" element={<EditDogEl />} />
         </Routes>
       </div>
     </AuthContext.Provider>
