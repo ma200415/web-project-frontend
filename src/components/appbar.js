@@ -11,9 +11,9 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { AuthContext } from "../contexts"
+import { AuthContext } from "../authContext"
 import { setAuthToken } from '../helpers/utils';
 
 const pages = [

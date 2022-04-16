@@ -20,7 +20,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { signin } from '../helpers/WebAPI'
 import { setAuthToken } from '../helpers/utils'
-import { AuthContext } from "../contexts"
+import { AuthContext } from "../authContext"
 
 const theme = createTheme();
 

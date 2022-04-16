@@ -15,35 +15,39 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-import { listDog } from '../../helpers/WebAPI'
+import { listDog, deleteDog } from '../../helpers/WebAPI'
+
+import { Link as RouterLink } from 'react-router-dom';
+
+import { useContext } from 'react';
+import { AuthContext } from "../../authContext"
 
 const theme = createTheme();
 
 export default function ListDog() {
   const [dogList, setDogList] = useState([]);
+  const [alert, setAlert] = useState({});
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    retrieveTutorials();
+    retrieveDogs();
   }, []);
 
-  const retrieveTutorials = async () => {
-    // TutorialDataService.getAll()
-    //   .then(response => {
-    //     setTutorials(response.data);
-    //     console.log(response.data);
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //   });
-
-    const sss = await listDog()
-    setDogList(sss)
-    console.log(dogList)
+  const isAllowAdd = () => {
+    return (user && user.admin ? true : false)
   };
 
-  const handleSubmit = async (event) => {
+  const retrieveDogs = async (dog) => {
+    const result = await listDog(dog)
+    setDogList(result)
+  };
+
+  const handleSearchSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
@@ -54,49 +58,82 @@ export default function ListDog() {
       gender: data.get('gender')
     };
 
-    const result = await listDog(dog)
-    console.log(result)
-    setDogList(result)
-    // if (result.success) {
-    //   // setUser(); //todo don't store password
-    // } else {
-    //   setErrorMessage(result)
-    // }
+    retrieveDogs(dog)
   };
 
-  const cards = [1, 2]
+  const handleDeleteDog = async (dog) => {
+    const result = await deleteDog(dog._id)
+
+    setAlert({ show: true, message: (result.success ? "Success" : result.message) })
+
+    retrieveDogs()
+  }
+
+  const handleSnackbarClose = () => {
+    setAlert({})
+  };
+
+  const getGender = (gender) => {
+    switch (gender) {
+      case "m":
+        return "Male"
+      case "f":
+        return "Female"
+      default:
+        return gender
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <main>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <TextField id="name" name="name" label="Name" type="search" />
-          <TextField id="breed" name="breed" label="Breed" type="search" />
-          <TextField id="age" name="age" label="Age" type="search" />
-
-          <FormControl>
-            <FormLabel id="genderLabel">Gender</FormLabel>
-            <RadioGroup
-              row
-              aria-labelledby="genderLabel"
-              name="gender"
-            >
-              <FormControlLabel value="f" control={<Radio />} label="Female" />
-              <FormControlLabel value="m" control={<Radio />} label="Male" />
-            </RadioGroup>
-          </FormControl>
-
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{ mt: 1, mb: 2 }}
+        <Box component="form" noValidate onSubmit={handleSearchSubmit} sx={{ mt: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
           >
-            Submit
-          </Button>
+            <TextField id="name" name="name" label="Name" type="search" />
+            <TextField id="breed" name="breed" label="Breed" type="search" />
+            <TextField id="age" name="age" label="Age" type="search" />
+
+            <FormControl>
+              <FormLabel id="genderLabel">Gender</FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby="genderLabel"
+                name="gender"
+              >
+                <FormControlLabel value="f" control={<Radio />} label="Female" />
+                <FormControlLabel value="m" control={<Radio />} label="Male" />
+              </RadioGroup>
+            </FormControl>
+
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ mt: 1, mb: 2 }}
+            >
+              Search
+            </Button>
+            {isAllowAdd() && (
+              <Button
+                color="success"
+                variant="contained"
+                sx={{ mt: 1, mb: 2 }}
+                component={RouterLink} to="/dog/add"
+              >
+                Add
+              </Button>
+            )}
+          </Stack>
         </Box>
 
         <Container sx={{ py: 2 }} maxWidth="md">
+          {dogList.length === 0 && "No records found"}
+
           <Grid container spacing={4}>
             {dogList.map((dog) => (
               <Grid item key={dog._id} xs={12} sm={6} md={4}>
@@ -105,10 +142,6 @@ export default function ListDog() {
                 >
                   <CardMedia
                     component="img"
-                    // sx={{
-                    //   // 16:9
-                    //   pt: '56.25%',
-                    // }}
                     image="https://source.unsplash.com/random"
                     alt="random"
                   />
@@ -117,22 +150,33 @@ export default function ListDog() {
                       {dog.name}
                     </Typography>
                     <Typography>
-                      {(dog.gender === 'm' ? "Male" : "Female")} ({dog.age})
+                      {(getGender(dog.gender))} ({dog.age})
                     </Typography>
                     <Typography>
                       Breed:  {dog.breed}
                     </Typography>
                   </CardContent>
-                  <CardActions>
-                    <Button size="small">Edit</Button>
-                    <Button size="small">Delete</Button>
-                  </CardActions>
+                  {user && (
+                    <CardActions>
+                      <Button size="small" component={RouterLink} to="/dog/edit" state={dog}>Edit</Button>
+                      <Button size="small" onClick={() => handleDeleteDog(dog)}>Delete</Button>
+                    </CardActions>
+                  )}
                 </Card>
               </Grid>
             ))}
           </Grid>
+          <Snackbar
+            open={alert.show}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+          >
+            <MuiAlert severity="success" sx={{ width: '100%' }}>
+              {alert.message}
+            </MuiAlert>
+          </Snackbar>
         </Container>
       </main>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }

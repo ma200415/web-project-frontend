@@ -57,6 +57,20 @@ export const addDog = async (form) => {
     );
 };
 
+export const editDog = async (form) => {
+    return await fetch(`${Config.BASE_URL}/dog/edit`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: form,
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
 export const listDog = async (data = {}) => {
     return await fetch(`${Config.BASE_URL}/dog`, {
         method: "POST",

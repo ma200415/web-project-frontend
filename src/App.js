@@ -1,7 +1,7 @@
 import './App.css';
 
 import { useState, useEffect } from 'react';
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Home from './components/home'
 import SignIn from './components/signin'
@@ -9,8 +9,9 @@ import AppBar from './components/appbar'
 import SignUp from './components/signup'
 import ListDog from './components/dog/list'
 import AddDog from './components/dog/add'
+import EditDog from './components/dog/edit'
 
-import { AuthContext } from "./contexts";
+import { AuthContext } from "./authContext";
 import { getAuthToken } from './helpers/utils'
 import { getDecodedAuthToken } from './helpers/WebAPI'
 
@@ -21,15 +22,23 @@ export default function App() {
     if (getAuthToken()) {
       getDecodedAuthToken().then((result) => {
         if (result.success) {
-          setUser(result.payload);  //todo don't store password
+          setUser(result.payload);
         }
       });
     }
   }, []);
 
+  const AddDogEl = () => {
+    if (user != null) {
+      return (user.admin ? <AddDog /> : "You do not have permisFsion")
+    } else {
+      return (<Navigate replace to="/signin" />)
+    }
+  }
+
   return (
-    <div className="App">
-      <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser }}>
+      <div className="App">
         <AppBar />
 
         <Routes>
@@ -37,9 +46,10 @@ export default function App() {
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="/dog/list" element={<ListDog />} />
-          <Route path="/dog/add" element={<AddDog />} />
+          <Route path="/dog/add" element={<AddDogEl />} />
+          <Route path="/dog/edit" element={<EditDog />} />
         </Routes>
-      </AuthContext.Provider>
-    </div>
+      </div>
+    </AuthContext.Provider>
   );
 }
