@@ -153,6 +153,12 @@ export default function ListDog() {
                     component="img"
                     image="https://source.unsplash.com/random"
                     alt="random"
+                    src={
+                      dog.photo ?
+                        `data:image/jpeg;base64, ${dog.photo}`
+                        :
+                        "/image/default.jpg"
+                    }
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
