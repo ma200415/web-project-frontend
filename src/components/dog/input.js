@@ -40,6 +40,7 @@ export default function InputDog(props) {
                 }
                 break;
             case "Edit":
+                data.append("name", props.dog.name);
                 data.append("dogId", props.dog._id);
                 data.append("photo", props.dog.photo);
                 break;
