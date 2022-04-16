@@ -54,7 +54,7 @@ export default function ListDog() {
     const dog = {
       name: data.get('name'),
       breed: data.get('breed'),
-      age: data.get('age'),
+      birth: data.get('birth'),
       gender: data.get('gender')
     };
 
@@ -119,6 +119,15 @@ export default function ListDog() {
               Search
             </Button>
             {isAllowAdd() && (
+              <TextField
+                id="birth"
+                label="Birth"
+                name="birth"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
               <Button
                 color="success"
                 variant="contained"
@@ -155,6 +164,11 @@ export default function ListDog() {
                     <Typography>
                       Breed:  {dog.breed}
                     </Typography>
+                    {dog.birth && (
+                      <Typography>
+                        Birth: {dog.birth} ({(new Date().getFullYear() - new Date(dog.birth).getFullYear())})
+                      </Typography>
+                    )}
                   </CardContent>
                   {user && (
                     <CardActions>
