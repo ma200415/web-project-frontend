@@ -59,7 +59,7 @@ export default function SignIn() {
 
       if (result.success && result.authToken) {
         setAuthToken(result.authToken)
-        setUser(signInUser); //todo don't store password
+        setUser({ email: result.email, admin: result.admin }); //set JWT payload
 
         navigate('/');
       } else {
