@@ -5,11 +5,15 @@ import { editDog } from '../../helpers/WebAPI'
 import InputDog from './input'
 
 export default function EditDog() {
-    const handleSubmit = async (data) => {
-        return await editDog(data)
-    };
-
     const location = useLocation()
+
+    const handleSubmit = async (data) => {
+        const result = await editDog(data)
+
+        console.log("handleEditDog", result)
+
+        return result
+    };
 
     return (
         <InputDog mode="Edit" dog={location.state} handleSubmit={handleSubmit} />

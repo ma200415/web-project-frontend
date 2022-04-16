@@ -4,10 +4,14 @@ import InputDog from './input'
 
 export default function AddDog() {
     const handleSubmit = async (data) => {
-        return await addDog(data)
+        const result = await addDog(data)
+
+        console.log("handleAddDog", result)
+
+        return result
     };
 
     return (
-        <InputDog mode="Add" handleSubmit={handleSubmit} />
+        <InputDog mode="Add" dog={null} handleSubmit={handleSubmit} />
     );
 }
