@@ -19,6 +19,7 @@ import { setAuthToken } from '../helpers/utils';
 const pages = [
   { name: 'Home', to: '' },
   { name: 'Dog', to: '/dog/list' },
+  { name: 'Booking', to: '/booking/list' },
 ];
 const guestSettings = [
   { name: 'Sign In', to: 'signin' },

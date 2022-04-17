@@ -46,11 +46,16 @@ export const queryUser = async (data = {}) => {
 
 export const getDecodedAuthToken = async () => {
     return await fetch(`${Config.BASE_URL}/auth`, {
+export const queryDog = async (data = {}) => {
+    return await fetch(`${Config.BASE_URL}/dog/name`, {
         method: "POST",
         cache: 'no-cache',
         headers: {
             'authorization': `Bearer ${getAuthToken()}`,
         }
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
     }).then(
         (res) => res.json(),
         (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
@@ -109,6 +114,43 @@ export const deleteDog = async (id = "") => {
             'authorization': `Bearer ${getAuthToken()}`,
         },
         body: JSON.stringify({ id: id }),
+export const newBooking = async (data = {}) => {
+    return await fetch(`${Config.BASE_URL}/booking/new`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(data),
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
+export const listBooking = async () => {
+    return await fetch(`${Config.BASE_URL}/booking`, {
+        method: "GET",
+        cache: 'no-cache',
+        headers: {
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
+export const bookedDog = async (data = {}) => {
+    return await fetch(`${Config.BASE_URL}/booking/booked`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(data),
     }).then(
         (res) => res.json(),
         (error) => { process.env.NODE_ENV !== "production" && console.log(error) }

@@ -7,9 +7,13 @@ import Home from './components/home'
 import SignIn from './components/signin'
 import AppBar from './components/appbar'
 import SignUp from './components/signup'
+
 import ListDog from './components/dog/list'
 import AddDog from './components/dog/add'
 import EditDog from './components/dog/edit'
+
+import BookDog from './components/booking/book'
+import ListBooking from './components/booking/list'
 
 import { AuthContext } from "./authContext";
 import { getAuthToken } from './helpers/utils'
@@ -28,17 +32,20 @@ export default function App() {
     }
   }, []);
 
-  const AddDogEl = () => {
+  const AuthEl = (props) => {
     if (user != null) {
-      return (user.admin ? <AddDog /> : "You do not have permission to access")
-    } else {
-      return (<Navigate replace to="/signin" />)
-    }
-  }
-
-  const EditDogEl = () => {
-    if (user != null) {
-      return (<EditDog />)
+      switch (props.page) {
+        case "dogAdd":
+          return (user.admin ? <AddDog /> : "You do not have permission to access")
+        case "dogEdit":
+          return (<EditDog />)
+        case "bookingBook":
+          return (<BookDog />)
+        case "bookingList":
+          return (<ListBooking />)
+        default:
+          break;
+      }
     } else {
       return (<Navigate replace to="/signin" />)
     }
@@ -54,8 +61,10 @@ export default function App() {
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="/dog/list" element={<ListDog />} />
-          <Route path="/dog/add" element={<AddDogEl />} />
-          <Route path="/dog/edit" element={<EditDogEl />} />
+          <Route path="/dog/add" element={<AuthEl page="dogAdd" />} />
+          <Route path="/dog/edit" element={<AuthEl page="dogEdit" />} />
+          <Route path="/booking/book" element={<AuthEl page="bookingBook" />} />
+          <Route path="/booking/list" element={<AuthEl page="bookingList" />} />
         </Routes>
       </div>
     </AuthContext.Provider>
