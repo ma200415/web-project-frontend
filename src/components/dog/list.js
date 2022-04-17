@@ -19,8 +19,17 @@ import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+import BlockIcon from '@mui/icons-material/Block';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import IconButton from '@mui/material/IconButton';
 
-import { listDog, deleteDog, queryUser } from '../../helpers/WebAPI'
+import { listDog, deleteDog, queryUser, bookedDog, bookmarkDog } from '../../helpers/WebAPI'
+import { getDogAge, getGender, dateToString } from '../../helpers/utils'
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -28,6 +37,10 @@ import { useContext } from 'react';
 import { AuthContext } from "../../authContext"
 
 const theme = createTheme();
+
+const dogTD = {
+  textAlign: 'left'
+};
 
 export default function ListDog() {
   const [dogList, setDogList] = useState([]);
@@ -84,17 +97,6 @@ export default function ListDog() {
     setAlert({})
   };
 
-  const getGender = (gender) => {
-    switch (gender) {
-      case "m":
-        return "Male"
-      case "f":
-        return "Female"
-      default:
-        return gender
-    }
-  }
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -118,7 +120,6 @@ export default function ListDog() {
                   shrink: true,
                 }}
               />
-
               <FormControl>
                 <FormLabel id="genderLabel">Gender</FormLabel>
                 <RadioGroup
@@ -136,19 +137,21 @@ export default function ListDog() {
                 type="submit"
                 variant="contained"
                 sx={{ mt: 1, mb: 2 }}
+                startIcon={<SearchIcon />}
               >
                 Search
               </Button>
-              {isAllowAdd() && (
+              {isAllowAdd() &&
                 <Button
                   color="success"
                   variant="contained"
                   sx={{ mt: 1, mb: 2 }}
                   component={RouterLink} to="/dog/add"
+                  startIcon={<AddIcon />}
                 >
                   Add
                 </Button>
-              )}
+              }
             </Stack>
           </Box>
         </Container>
@@ -171,36 +174,117 @@ export default function ListDog() {
                         "/image/default.jpg"
                     }
                   />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {dog.name}
-                    </Typography>
-                    <Typography>
-                      {(getGender(dog.gender))}
-                    </Typography>
-                    <Typography>
-                      Breed:  {dog.breed}
-                    </Typography>
-                    {dog.birth && (
-                      <Typography>
-                        Birth: {dog.birth} ({(new Date().getFullYear() - new Date(dog.birth).getFullYear())})
-                      </Typography>
-                    )}
-                    <Typography>
-                      Created: {dog.addByName} [{new Date(dog.addTimestamp).toLocaleString()}]
-                    </Typography>
-                    {dog.editByName && (
-                      <Typography>
-                        Edited: {dog.editByName} [{new Date(dog.editTimestamp).toLocaleString()}]
-                      </Typography>
-                    )}
+                  <CardContent spacing={4} sx={{ flexGrow: 1 }}>
+                    <table cellPadding={0} style={{ width: "85%", marginLeft: 'auto', marginRight: 'auto' }}>
+                      <thead>
+                        <tr>
+                          <td colSpan={2}>
+                            <Typography gutterBottom variant="h5" component="h2" textAlign={'center'}>
+                              {dog.name}
+                            </Typography>
+                          </td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          dog.gender &&
+                          <tr>
+                            <td style={dogTD}>
+                              <Typography>Gender:</Typography>
+                            </td>
+                            <td style={dogTD}>
+                              <Typography>{getGender(dog.gender)}</Typography>
+                            </td>
+                          </tr>
+                        }
+                        <tr>
+                          <td style={dogTD}>
+                            <Typography>Breed:</Typography>
+                          </td>
+                          <td style={dogTD}>
+                            <Typography>{dog.breed}</Typography>
+                          </td>
+                        </tr>
+                        {dog.birth &&
+                          <tr>
+                            <td style={dogTD}>
+                              <Typography>Birth:</Typography>
+                            </td>
+                            <td style={dogTD}>
+                              <Typography>{dog.birth} ({getDogAge(dog.birth)})</Typography>
+                            </td>
+                          </tr>
+                        }
+                        <tr>
+                          <td style={dogTD}>
+                            <Typography>Created:</Typography>
+                          </td>
+                          <td style={dogTD}>
+                            <Typography>{dog.addByName}</Typography>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                          </td>
+                          <td style={dogTD}>
+                            <Typography variant="subtitle2">
+                              {dateToString(dog.addTimestamp)}
+                            </Typography>
+                          </td>
+                        </tr>
+
+                        {
+                          dog.editByName &&
+                          <>
+                            <tr>
+                              <td style={dogTD}>
+                                <Typography>Edited:</Typography>
+                              </td>
+                              <td style={dogTD}>
+                                <Typography>{dog.editByName}</Typography>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                              </td>
+                              <td style={dogTD}>
+                                <Typography variant="subtitle2" >
+                                  {dateToString(dog.editTimestamp)}
+                                </Typography>
+                              </td>
+                            </tr>
+                          </>
+                        }
+                      </tbody>
+                    </table>
+
                   </CardContent>
-                  {user && (
+                  {user &&
                     <CardActions>
-                      <Button size="small" component={RouterLink} to="/dog/edit" state={dog}>Edit</Button>
-                      <Button size="small" onClick={() => handleDeleteDog(dog)}>Delete</Button>
+                      {
+                        dog.booked ?
+                          <Button color="secondary" startIcon={<BlockIcon />}>Reserved</Button>
+                          :
+                          <>
+                            <Button size="small" component={RouterLink} to="/booking/book" state={dog} color="success" variant="contained" startIcon={<PendingActionsIcon />}>
+                              Book
+                            </Button>
+                            <Button size="small" component={RouterLink} to="/dog/edit" state={dog} startIcon={<EditIcon />}>
+                              Edit
+                            </Button>
+                            <Button size="small" onClick={() => handleDeleteDog(dog)} startIcon={<DeleteIcon />}>
+                              Delete
+                            </Button>
+                            <IconButton onClick={() => {
+                              handleBookmarkDog(dog);
+                            }}
+                              style={{ marginLeft: "auto" }}>
+                              <BookmarkAddIcon color="primary" />
+                            </IconButton>
+                          </>
+                      }
                     </CardActions>
-                  )}
+                  }
                 </Card>
               </Grid>
             ))}
@@ -210,7 +294,7 @@ export default function ListDog() {
             autoHideDuration={6000}
             onClose={handleSnackbarClose}
           >
-            <MuiAlert severity="success" sx={{ width: '100%' }}>
+            <MuiAlert severity={alert.message === "success" ? "success" : "error"} sx={{ width: '100%' }}>
               {alert.message}
             </MuiAlert>
           </Snackbar>

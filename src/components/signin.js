@@ -40,16 +40,6 @@ export default function SignIn() {
       password: data.get('password')
     };
 
-    if (!signInUser.email) {
-      setErrorMessage({ errorType: "email", message: "Required*" })
-
-      return;
-    } else if (!signInUser.password) {
-      setErrorMessage({ errorType: "password", message: "Required*" })
-
-      return;
-    }
-
     try {
       const result = await signin(signInUser)
 
@@ -86,7 +76,7 @@ export default function SignIn() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -98,7 +88,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               error={errorMessage.errorType === "email"}
               helperText={errorMessage.errorType === "email" && errorMessage.message}
@@ -146,7 +136,7 @@ export default function SignIn() {
         </Box>
       </Container>
       <Snackbar
-        open={errorMessage.errorType === "error"}
+        open={errorMessage.errorType}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
       >
