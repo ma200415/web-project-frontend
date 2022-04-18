@@ -92,12 +92,12 @@ export default function ListDog(props) {
     setDogList(dogs)
   };
 
-  const handleSearchSubmit = async (event) => {
+  const handleSearch = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     const dog = {
-      name: data.get('name'),
+      _id: data.get('id'),
       breed: data.get('breed'),
       birth: data.get('birth'),
       gender: data.get('gender'),
@@ -140,25 +140,13 @@ export default function ListDog(props) {
       <CssBaseline />
       <main>
         <Container sx={{ py: 2 }} maxWidth="lg">
-          <Box component="form" noValidate onSubmit={handleSearchSubmit} sx={{ mt: 2 }}>
+          <Box component="form" noValidate onSubmit={handleSearch} sx={{ mt: 2 }}>
             <Stack
               direction="row"
               justifyContent="center"
               alignItems="center"
               spacing={1}
             >
-              <TextField id="name" name="name" label="Name" type="search" />
-              <TextField id="breed" name="breed" label="Breed" type="search" />
-              <TextField
-                id="birth"
-                label="Birth"
-                name="birth"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                InputProps={{ inputProps: { max: minMaxDateFormat(new Date()) } }}
-              />
               <FormControl>
                 <TextField id="id" name="id" label="ID" type="search"
                   inputProps={{
@@ -227,24 +215,28 @@ export default function ListDog(props) {
                 </RadioGroup>
               </FormControl>
 
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ mt: 1, mb: 2 }}
-                startIcon={<SearchIcon />}
-              >
-                Search
-              </Button>
-              {isAllowAdd() &&
+              <FormControl>
                 <Button
-                  color="success"
+                  type="submit"
                   variant="contained"
                   sx={{ mt: 1, mb: 2 }}
-                  component={RouterLink} to="/dog/add"
-                  startIcon={<AddIcon />}
+                  startIcon={<SearchIcon />}
                 >
-                  Add
+                  Search
                 </Button>
+              </FormControl>
+              {isAllowAdd() && props.mode !== "mylist" &&
+                <FormControl>
+                  <Button
+                    color="success"
+                    variant="contained"
+                    sx={{ mt: 1, mb: 2 }}
+                    component={RouterLink} to="/dog/add"
+                    startIcon={<AddIcon />}
+                  >
+                    Add
+                  </Button>
+                </FormControl>
               }
             </Stack>
           </Box>
@@ -349,7 +341,6 @@ export default function ListDog(props) {
                             </Typography>
                           </td>
                         </tr>
-
                         {
                           dog.editByName &&
                           <>
@@ -374,37 +365,53 @@ export default function ListDog(props) {
                         }
                       </tbody>
                     </table>
-
                   </CardContent>
-                  {user &&
-                    <CardActions>
-                      {
-                        dog.booked ?
-                          <Button color="secondary" startIcon={<BlockIcon />}>Reserved</Button>
+                  <CardActions>
+                    {
+                      dog.booked ?
+                        <Button color="secondary" startIcon={<BlockIcon />}>
+                          Reserved
+                        </Button>
+                        :
+                        <Button
+                          size="small"
+                          component={RouterLink}
+                          to={user ? "/booking/book" : "/signin"}
+                          state={user && dog}
+                          color="success"
+                          variant="contained"
+                          startIcon={<PendingActionsIcon />}
+                        >
+                          Book
+                        </Button>
+                    }
+                    {
+                      user && user.role === "employee" &&
+                      <>
+                        <Button size="small" component={RouterLink} to="/dog/edit" state={dog} startIcon={<EditIcon />}>
+                          Edit
+                        </Button>
+                        <Button size="small" onClick={() => handleDeleteDog(dog)} startIcon={<DeleteIcon />}>
+                          Delete
+                        </Button>
+                      </>
+                    }
+                    {
+                      user &&
+                      <IconButton
+                        onClick={() => {
+                          dog.bookmark ? handleUndoBookmarkDog(dog) : handleBookmarkDog(dog)
+                        }}
+                        style={{ marginLeft: "auto" }}
+                      >
+                        {dog.bookmark ?
+                          <BookmarkAddedIcon color="success" />
                           :
-                          <>
-                            <Button size="small" component={RouterLink} to="/booking/book" state={dog} color="success" variant="contained" startIcon={<PendingActionsIcon />}>
-                              Book
-                            </Button>
-                            <Button size="small" component={RouterLink} to="/dog/edit" state={dog} startIcon={<EditIcon />}>
-                              Edit
-                            </Button>
-                            <Button size="small" onClick={() => handleDeleteDog(dog)} startIcon={<DeleteIcon />}>
-                              Delete
-                            </Button>
-                            <IconButton onClick={() => {
-                              dog.bookmark ?
-                                handleUndoBookmarkDog(dog)
-                                :
-                                handleBookmarkDog(dog)
-                            }}
-                              style={{ marginLeft: "auto" }}>
-                              <BookmarkAddIcon color={dog.bookmark ? "success" : "primary"} />
-                            </IconButton>
-                          </>
-                      }
-                    </CardActions>
-                  }
+                          <BookmarkAddIcon color="primary" />
+                        }
+                      </IconButton>
+                    }
+                  </CardActions>
                 </Card>
               </Grid>
             ))}

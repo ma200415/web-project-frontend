@@ -28,6 +28,7 @@ export default function Home() {
         <Box
           sx={{
             marginTop: 4,
+            marginBottom: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
