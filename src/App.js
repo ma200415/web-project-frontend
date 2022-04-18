@@ -36,13 +36,15 @@ export default function App() {
     if (user != null) {
       switch (props.page) {
         case "dogAdd":
-          return (user.admin ? <AddDog /> : "You do not have permission to access")
+          return user.admin ? <AddDog /> : "You do not have permission to access"
         case "dogEdit":
-          return (<EditDog />)
+          return <EditDog />
         case "bookingBook":
-          return (<BookDog />)
+          return <BookDog />
         case "bookingList":
-          return (<ListBooking />)
+          return <ListBooking />
+        case "mylist":
+          return <ListDog mode="mylist" />
         default:
           break;
       }
@@ -65,6 +67,7 @@ export default function App() {
           <Route path="/dog/edit" element={<AuthEl page="dogEdit" />} />
           <Route path="/booking/book" element={<AuthEl page="bookingBook" />} />
           <Route path="/booking/list" element={<AuthEl page="bookingList" />} />
+          <Route path="/mylist" element={<AuthEl page="mylist" />} />
         </Routes>
       </div>
     </AuthContext.Provider>

@@ -29,7 +29,7 @@ import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import IconButton from '@mui/material/IconButton';
 
 import { listDog, deleteDog, queryUser, bookedDog, bookmarkDog, unbookmarkDog } from '../../helpers/WebAPI'
-import { getDogAge, getGender, dateToString, getUserName } from '../../helpers/utils'
+import { getDogAge, getGender, dateToString, getUserName, minMaxDateFormat } from '../../helpers/utils'
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -42,7 +42,7 @@ const dogTD = {
   textAlign: 'left'
 };
 
-export default function ListDog() {
+export default function ListDog(props) {
   const [dogList, setDogList] = useState([]);
   const [alert, setAlert] = useState({});
   const { user } = useContext(AuthContext);
@@ -56,28 +56,35 @@ export default function ListDog() {
   };
 
   const retrieveDogs = async (dog) => {
-    const result = await listDog(dog)
-
     const currentUser = await queryUser({ id: user._id })
 
-    for (const element of result) {
-      const addByUser = await queryUser({ id: element.addBy })
-      element.addByName = getUserName(addByUser.firstName, addByUser.lastName)
+    const dogs = await listDog(dog)
 
-      if (element.editBy) {
-        const editByUser = await queryUser({ id: element.editBy })
-        element.editByName = getUserName(editByUser.firstName, editByUser.lastName)
+    for (const dog of dogs) {
+      if (currentUser.bookmarks) {
+        const bookmarked = currentUser.bookmarks.filter(bookmarkDog => bookmarkDog === dog._id).length > 0
+
+        if (props.mode === "mylist" && !bookmarked) {
+          dogs.splice(dogs.findIndex(d => d._id === dog._id), 1); //remove dog from dogs if not in bookmark
+          continue
+        }
+
+        dog.bookmark = bookmarked
       }
 
-      const bookedDogs = await bookedDog({ dogId: element._id })
-      element.booked = bookedDogs.length > 0
+      const addByUser = await queryUser({ id: dog.addBy })
+      dog.addByName = getUserName(addByUser.firstName, addByUser.lastName)
 
-      if (currentUser.hasOwnProperty("bookmarks")) {
-        element.bookmark = currentUser.bookmarks.filter(bookmarkDog => bookmarkDog === element._id).length > 0
+      if (dog.editBy) {
+        const editByUser = await queryUser({ id: dog.editBy })
+        dog.editByName = getUserName(editByUser.firstName, editByUser.lastName)
       }
+
+      const bookedDogs = await bookedDog({ dogId: dog._id })
+      dog.booked = bookedDogs.length > 0
     }
 
-    setDogList(result)
+    setDogList(dogs)
   };
 
   const handleSearchSubmit = async (event) => {
@@ -144,6 +151,7 @@ export default function ListDog() {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                InputProps={{ inputProps: { max: minMaxDateFormat(new Date()) } }}
               />
               <FormControl>
                 <FormLabel id="genderLabel">Gender</FormLabel>
@@ -154,7 +162,7 @@ export default function ListDog() {
                 >
                   <FormControlLabel value="f" control={<Radio />} label="Female" />
                   <FormControlLabel value="m" control={<Radio />} label="Male" />
-                  <FormControlLabel value='' control={<Radio />} label="N/A" />
+                  <FormControlLabel value='' control={<Radio />} label="All" />
                 </RadioGroup>
               </FormControl>
 
@@ -182,7 +190,11 @@ export default function ListDog() {
         </Container>
 
         <Container sx={{ py: 2 }} maxWidth="lg">
-          {(dogList && dogList.length === 0) && "No records found"}
+          {(dogList && dogList.length === 0) &&
+            <Typography variant="h6" textAlign={'center'}>
+              No records found
+            </Typography>
+          }
 
           <Grid container spacing={4}>
             {dogList.map((dog) => (
