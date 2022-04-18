@@ -27,10 +27,7 @@ const guestSettings = [
   { name: 'Sign in', to: 'signin' },
   { name: 'Sign up', to: 'signup' }
 ];
-const userSettings = [
-  { name: 'Profile', to: 'profile' },
-  { name: 'Account', to: 'account' },
-];
+const userSettings = [];
 
 export default function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);

@@ -180,11 +180,6 @@ export default function ListBooking() {
     setOrderBy(property);
   };
 
-  const handleClick = () => {
-    //todo row click?
-    console.log("sss")
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
