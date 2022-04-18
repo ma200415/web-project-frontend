@@ -105,7 +105,7 @@ export default function ListDog(props) {
     const dog = {
       _id: data.get('id'),
       breed: data.get('breed'),
-      birth: data.get('birth'),
+      birthday: data.get('birthday'),
       gender: data.get('gender'),
       location: data.get("location")
     };
@@ -312,13 +312,13 @@ export default function ListDog(props) {
                           </tr>
                         }
                         {
-                          dog.birth &&
+                          dog.birthday &&
                           <tr>
                             <td style={dogTD}>
-                              <Typography>Birth:</Typography>
+                              <Typography>Birthday:</Typography>
                             </td>
                             <td style={dogTD}>
-                              <Typography>{dog.birth} ({getDogAge(dog.birth)})</Typography>
+                              <Typography>{dog.birthday} ({getDogAge(dog.birthday)})</Typography>
                             </td>
                           </tr>
                         }

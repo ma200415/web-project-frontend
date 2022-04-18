@@ -67,7 +67,7 @@ export default function BookDog(props) {
         { name: "Name", value: location.state.name },
         { name: "Gender", value: getGender(location.state.gender) },
         { name: "Breed", value: location.state.breed },
-        { name: "Birth", value: location.state.birth && (location.state.birth + " (" + getDogAge(location.state.birth) + ")") },
+        { name: "Birthday", value: location.state.birthday && (location.state.birthday + " (" + getDogAge(location.state.birthday) + ")") },
     ]
 
     return (

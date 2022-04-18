@@ -149,11 +149,11 @@ export default function InputDog(props) {
                             <Grid item xs={12}>
                                 <FormControl fullWidth>
                                     <TextField
-                                        id="birth"
-                                        label="Birth"
-                                        name="birth"
+                                        id="birthday"
+                                        label="Birthday"
+                                        name="birthday"
                                         type="date"
-                                        defaultValue={props.dog && props.dog.birth}
+                                        defaultValue={props.dog && props.dog.birthday}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
