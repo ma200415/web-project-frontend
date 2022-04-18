@@ -22,11 +22,8 @@ import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-import { useContext } from 'react';
-
 import { listBooking, queryDog } from '../../helpers/WebAPI'
 import { dateToString } from '../../helpers/utils'
-import { AuthContext } from "../../authContext"
 
 const theme = createTheme();
 
@@ -140,8 +137,6 @@ const EnhancedTableToolbar = () => {
 export default function ListBooking() {
   const [bookingList, setBookingList] = useState([]);
   const [alert, setAlert] = useState({});
-  const { user } = useContext(AuthContext);
-
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
   const [page, setPage] = useState(0);
@@ -194,50 +189,6 @@ export default function ListBooking() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <main>
-        {/* <Container sx={{ py: 2 }} maxWidth="lg">
-          <Box component="form" noValidate onSubmit={handleSearchSubmit} sx={{ mt: 2 }}>
-            <Stack
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              <TextField id="name" name="name" label="Name" type="search" />
-              <TextField id="breed" name="breed" label="Breed" type="search" />
-              <TextField
-                id="birth"
-                label="Birth"
-                name="birth"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-
-              <FormControl>
-                <FormLabel id="genderLabel">Gender</FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="genderLabel"
-                  name="gender"
-                >
-                  <FormControlLabel value="f" control={<Radio />} label="Female" />
-                  <FormControlLabel value="m" control={<Radio />} label="Male" />
-                  <FormControlLabel value='' control={<Radio />} label="N/A" />
-                </RadioGroup>
-              </FormControl>
-
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ mt: 1, mb: 2 }}
-              >
-                Search
-              </Button>
-            </Stack>
-          </Box>
-        </Container> */}
-
         <Container sx={{ py: 2 }} maxWidth="lg">
           <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
