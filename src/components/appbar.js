@@ -14,15 +14,16 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link, useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../authContext"
-import { setAuthToken } from '../helpers/utils';
+import { setAuthToken, getUserName } from '../helpers/utils';
 
 const pages = [
   { name: 'Home', to: '' },
   { name: 'Dog', to: '/dog/list' },
-  { name: 'Booking', to: '/booking/list' },
+  { name: 'Booking', to: '/booking/list', auth: true }
 ];
+
 const guestSettings = [
-  { name: 'Sign In', to: 'signin' },
+  { name: 'Sign in', to: 'signin' },
   { name: 'Sign up', to: 'signup' }
 ];
 const userSettings = [
@@ -156,6 +157,7 @@ export default function ResponsiveAppBar() {
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
+              (!page.auth || (page.auth && user)) &&
               <Button
                 key={page.name}
                 onClick={handleCloseNavMenu}
@@ -170,7 +172,7 @@ export default function ResponsiveAppBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar {...user && stringAvatar(user.firstName + " " + user.lastName)} />
+              <Avatar {...user && stringAvatar(getUserName(user.firstName, user.lastName))} />
             </IconButton>
             <Menu
               sx={{ mt: '45px' }}
