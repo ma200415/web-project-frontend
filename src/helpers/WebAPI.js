@@ -44,18 +44,27 @@ export const queryUser = async (data = {}) => {
     );
 };
 
-export const getDecodedAuthToken = async () => {
-    return await fetch(`${Config.BASE_URL}/auth`, {
 export const queryDog = async (data = {}) => {
     return await fetch(`${Config.BASE_URL}/dog/name`, {
         method: "POST",
         cache: 'no-cache',
         headers: {
-            'authorization': `Bearer ${getAuthToken()}`,
-        }
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
+export const getDecodedAuthToken = async () => {
+    return await fetch(`${Config.BASE_URL}/auth`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'authorization': `Bearer ${getAuthToken()}`,
+        }
     }).then(
         (res) => res.json(),
         (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
@@ -113,7 +122,12 @@ export const deleteDog = async (id = "") => {
             'Content-Type': 'application/json',
             'authorization': `Bearer ${getAuthToken()}`,
         },
-        body: JSON.stringify({ id: id }),
+        body: JSON.stringify({ dogId: id }),
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
 export const newBooking = async (data = {}) => {
     return await fetch(`${Config.BASE_URL}/booking/new`, {
         method: "POST",
