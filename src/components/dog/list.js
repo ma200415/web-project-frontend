@@ -65,12 +65,14 @@ export default function ListDog(props) {
 
     const dogs = await listDog(dog)
 
+    const removes = []
+
     for (const dog of dogs) {
       if (currentUser.bookmarks) {
         const bookmarked = currentUser.bookmarks.filter(bookmarkDog => bookmarkDog === dog._id).length > 0
 
         if (props.mode === "mylist" && !bookmarked) {
-          dogs.splice(dogs.findIndex(d => d._id === dog._id), 1); //remove dog from dogs if not in bookmark
+          removes.push(dog._id)
           continue
         }
 
@@ -87,6 +89,10 @@ export default function ListDog(props) {
 
       const bookedDogs = await bookedDog({ dogId: dog._id })
       dog.booked = bookedDogs.length > 0
+    }
+
+    for (const id of removes) {
+      dogs.splice(dogs.findIndex(d => d._id === id), 1);
     }
 
     setDogList(dogs)
