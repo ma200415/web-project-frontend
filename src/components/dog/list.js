@@ -29,7 +29,7 @@ import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import IconButton from '@mui/material/IconButton';
 
 import { listDog, deleteDog, queryUser, bookedDog, bookmarkDog } from '../../helpers/WebAPI'
-import { getDogAge, getGender, dateToString } from '../../helpers/utils'
+import { getDogAge, getGender, dateToString, getUserName } from '../../helpers/utils'
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -60,11 +60,11 @@ export default function ListDog() {
 
     for (const element of result) {
       const addByUser = await queryUser({ id: element.addBy })
-      element.addByName = addByUser.firstName + " " + addByUser.lastName
+      element.addByName = getUserName(addByUser.firstName, addByUser.lastName)
 
       if (element.editBy) {
         const editByUser = await queryUser({ id: element.editBy })
-        element.editByName = editByUser.firstName + " " + editByUser.lastName
+        element.editByName = getUserName(editByUser.firstName, editByUser.lastName)
       }
     }
 
