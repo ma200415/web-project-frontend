@@ -34,8 +34,7 @@ export const queryUser = async (data = {}) => {
         method: "POST",
         cache: 'no-cache',
         headers: {
-            'Content-Type': 'application/json',
-            'authorization': `Bearer ${getAuthToken()}`,
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
     }).then(
@@ -128,6 +127,37 @@ export const deleteDog = async (id = "") => {
         (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
     );
 };
+
+export const bookmarkDog = async (id = "") => {
+    return await fetch(`${Config.BASE_URL}/user/bookmark`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify({ dogId: id }),
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
+export const unbookmarkDog = async (id = "") => {
+    return await fetch(`${Config.BASE_URL}/user/unbookmark`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify({ dogId: id }),
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
 export const newBooking = async (data = {}) => {
     return await fetch(`${Config.BASE_URL}/booking/new`, {
         method: "POST",
