@@ -18,6 +18,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -59,141 +60,142 @@ export default function InputDog(props) {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="sm">
                 <CssBaseline />
-                <Box
-                    sx={{
-                        marginTop: 4,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Typography component="h1" variant="h5">
-                        {props.mode}
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <FormControl required fullWidth>
-                                    <InputLabel htmlFor="location">Location</InputLabel>
-                                    <Select
-                                        id="location"
-                                        label="location"
-                                        name="location"
-                                        defaultValue={props.dog && props.dog.location}
-                                    >
-                                        <ListSubheader>
-                                            {hkIsland.district}
-                                        </ListSubheader>
-                                        {
-                                            hkIsland.centres.map((centre) =>
-                                                <MenuItem value={centre}>
-                                                    {centre}
-                                                </MenuItem>
-                                            )
-                                        }
+                <Paper elevation={3} sx={{ pl: 2, pr: 2, pb: 2, pt: 2, marginTop: 4 }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Typography component="h1" variant="h5">
+                            {props.mode}
+                        </Typography>
+                        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <FormControl required fullWidth>
+                                        <InputLabel htmlFor="location">Location</InputLabel>
+                                        <Select
+                                            id="location"
+                                            label="location"
+                                            name="location"
+                                            defaultValue={props.dog ? props.dog.location : ""}
+                                        >
+                                            <ListSubheader>
+                                                {hkIsland.district}
+                                            </ListSubheader>
+                                            {
+                                                hkIsland.centres.map((centre) =>
+                                                    <MenuItem value={centre}>
+                                                        {centre}
+                                                    </MenuItem>
+                                                )
+                                            }
 
-                                        <ListSubheader>
-                                            {kowloon.district}
-                                        </ListSubheader>
-                                        {
-                                            kowloon.centres.map((centre) =>
-                                                <MenuItem value={centre}>
-                                                    {centre}
-                                                </MenuItem>
-                                            )
-                                        }
+                                            <ListSubheader>
+                                                {kowloon.district}
+                                            </ListSubheader>
+                                            {
+                                                kowloon.centres.map((centre) =>
+                                                    <MenuItem value={centre}>
+                                                        {centre}
+                                                    </MenuItem>
+                                                )
+                                            }
 
-                                        <ListSubheader>
-                                            {newTerritories.district}
-                                        </ListSubheader>
-                                        {
-                                            newTerritories.centres.map((centre) =>
-                                                <MenuItem value={centre}>
-                                                    {centre}
-                                                </MenuItem>
-                                            )
-                                        }
-                                    </Select>
-                                </FormControl>
+                                            <ListSubheader>
+                                                {newTerritories.district}
+                                            </ListSubheader>
+                                            {
+                                                newTerritories.centres.map((centre) =>
+                                                    <MenuItem value={centre}>
+                                                        {centre}
+                                                    </MenuItem>
+                                                )
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl fullWidth>
+                                        <TextField
+                                            required
+                                            id="name"
+                                            label="Name"
+                                            name="name"
+                                            error={errorMessage.errorType === "name"}
+                                            helperText={errorMessage.errorType === "name" && errorMessage.message}
+                                            InputProps={{
+                                                readOnly: props.mode === "Edit",
+                                            }}
+                                            defaultValue={props.dog && props.dog.name}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl fullWidth>
+                                        <TextField
+                                            id="breed"
+                                            label="Breed"
+                                            name="breed"
+                                            error={errorMessage.errorType === "breed"}
+                                            helperText={errorMessage.errorType === "breed" && errorMessage.message}
+                                            defaultValue={props.dog && props.dog.breed}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl fullWidth>
+                                        <TextField
+                                            id="birthday"
+                                            label="Birthday"
+                                            name="birthday"
+                                            type="date"
+                                            defaultValue={props.dog && props.dog.birthday}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            InputProps={{ inputProps: { max: minMaxDateFormat(new Date()) } }}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl fullWidth>
+                                        <FormLabel id="genderLabel">Gender</FormLabel>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="genderLabel"
+                                            id="gender"
+                                            name="gender"
+                                            defaultValue={props.dog && props.dog.gender}
+                                        >
+                                            <FormControlLabel value="f" control={<Radio />} label="Female" />
+                                            <FormControlLabel value="m" control={<Radio />} label="Male" />
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl fullWidth>
+                                        <input id="photo" type="file" name="photo" />
+                                    </FormControl>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        required
-                                        id="name"
-                                        label="Name"
-                                        name="name"
-                                        error={errorMessage.errorType === "name"}
-                                        helperText={errorMessage.errorType === "name" && errorMessage.message}
-                                        InputProps={{
-                                            readOnly: props.mode === "Edit",
-                                        }}
-                                        defaultValue={props.dog && props.dog.name}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        id="breed"
-                                        label="Breed"
-                                        name="breed"
-                                        error={errorMessage.errorType === "breed"}
-                                        helperText={errorMessage.errorType === "breed" && errorMessage.message}
-                                        defaultValue={props.dog && props.dog.breed}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        id="birthday"
-                                        label="Birthday"
-                                        name="birthday"
-                                        type="date"
-                                        defaultValue={props.dog && props.dog.birthday}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        InputProps={{ inputProps: { max: minMaxDateFormat(new Date()) } }}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <FormLabel id="genderLabel">Gender</FormLabel>
-                                    <RadioGroup
-                                        row
-                                        aria-labelledby="genderLabel"
-                                        id="gender"
-                                        name="gender"
-                                        defaultValue={props.dog && props.dog.gender}
-                                    >
-                                        <FormControlLabel value="f" control={<Radio />} label="Female" />
-                                        <FormControlLabel value="m" control={<Radio />} label="Male" />
-                                    </RadioGroup>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <input id="photo" type="file" name="photo" />
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                        <FormControl fullWidth>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Submit
-                            </Button>
-                        </FormControl>
+                            <FormControl fullWidth>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    Submit
+                                </Button>
+                            </FormControl>
 
+                        </Box>
                     </Box>
-                </Box>
+                </Paper>
             </Container>
             <Snackbar
                 open={errorMessage.errorType}

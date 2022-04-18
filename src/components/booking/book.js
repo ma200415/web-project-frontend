@@ -74,94 +74,95 @@ export default function BookDog(props) {
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="sm">
                 <CssBaseline />
-                <Box
-                    sx={{
-                        marginTop: 4,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Typography component="h1" variant="h5">
-                        Booking
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TableContainer component={Paper}>
-                                    <Table size="small">
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell colSpan={2}>Interested Dog</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {dogInfo.map((row) => (
-                                                <TableRow key={row.name}>
-                                                    <TableCell width={"100px"}>{row.name}:</TableCell>
-                                                    <TableCell>{row.value}</TableCell>
+                <Paper elevation={3} sx={{ pl: 2, pr: 2, pb: 2, pt: 2, marginTop: 4 }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Typography component="h1" variant="h5">
+                            Booking
+                        </Typography>
+                        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TableContainer component={Paper}>
+                                        <Table size="small">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell colSpan={2}>Interested Dog</TableCell>
                                                 </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
+                                            </TableHead>
+                                            <TableBody>
+                                                {dogInfo.map((row) => (
+                                                    <TableRow key={row.name}>
+                                                        <TableCell width={"100px"}>{row.name}:</TableCell>
+                                                        <TableCell>{row.value}</TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        id="name"
+                                        label="Name"
+                                        name="name"
+                                        defaultValue={user && getUserName(user.firstName, user.lastName)}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        id="contact"
+                                        label="Contact"
+                                        name="contact"
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        id="date"
+                                        label="Date"
+                                        name="date"
+                                        type="date"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        InputProps={{ inputProps: { min: minMaxDateFormat(new Date()) } }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        multiline
+                                        id="remark"
+                                        label="Remark"
+                                        name="remark"
+                                        rows={4}
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    id="name"
-                                    label="Name"
-                                    name="name"
-                                    defaultValue={user && getUserName(user.firstName, user.lastName)}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="contact"
-                                    label="Contact"
-                                    name="contact"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="date"
-                                    label="Date"
-                                    name="date"
-                                    type="date"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    InputProps={{ inputProps: { min: minMaxDateFormat(new Date()) } }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    multiline
-                                    id="remark"
-                                    label="Remark"
-                                    name="remark"
-                                    rows={4}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Submit
-                        </Button>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Submit
+                            </Button>
+                        </Box>
                     </Box>
-                </Box>
+                </Paper>
             </Container>
             <Snackbar
                 open={errorMessage.errorType}
@@ -172,6 +173,6 @@ export default function BookDog(props) {
                     {errorMessage.message}
                 </MuiAlert>
             </Snackbar>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }

@@ -198,7 +198,7 @@ export default function ListBooking() {
       <main>
         <Container sx={{ py: 2 }} maxWidth="lg">
           <Box sx={{ width: '100%' }}>
-            <Paper sx={{ width: '100%', mb: 2 }}>
+            <Paper elevation={2} sx={{ width: '100%', mb: 2 }}>
               <EnhancedTableToolbar />
               <TableContainer>
                 <Table
@@ -234,7 +234,7 @@ export default function ListBooking() {
                       })}
                     {emptyRows > 0 && (
                       <TableRow
-                        style={{
+                        sx={{
                           height: 53 * emptyRows,
                         }}
                       >

@@ -32,6 +32,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import ListSubheader from '@mui/material/ListSubheader';
 import Select from '@mui/material/Select';
+import Paper from '@mui/material/Paper';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
 import { listDog, deleteDog, queryUser, bookedDog, bookmarkDog, unbookmarkDog } from '../../helpers/WebAPI'
 import { getDogAge, getGender, dateToString, getUserName, hkIsland, kowloon, newTerritories } from '../../helpers/utils'
@@ -114,11 +116,13 @@ export default function ListDog(props) {
   };
 
   const handleDeleteDog = async (dog) => {
-    const result = await deleteDog(dog._id)
+    if (window.confirm("Are you sure to delete?")) {
+      const result = await deleteDog(dog._id)
 
-    setAlert({ show: true, type: (result.success ? "success" : "error"), message: (result.success ? "Deleted" : result.message) })
+      setAlert({ show: true, type: (result.success ? "success" : "error"), message: (result.success ? "Deleted" : result.message) })
 
-    retrieveDogs()
+      retrieveDogs()
+    }
   }
 
   const handleBookmarkDog = async (dog) => {
@@ -145,109 +149,111 @@ export default function ListDog(props) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <main>
-        <Container sx={{ py: 2 }} maxWidth="xl">
-          <Box component="form" noValidate onSubmit={handleSearch} sx={{ mt: 2 }}>
-            <Stack
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              <FormControl>
-                <TextField id="id" name="id" label="ID" type="search"
-                  inputProps={{
-                    maxLength: 24,
-                    size: 24
-                  }}
-                />
-              </FormControl>
-              <FormControl>
-                <TextField id="breed" name="breed" label="Breed" type="search" />
-              </FormControl>
-              <FormControl sx={{ minWidth: "120px" }} >
-                <InputLabel htmlFor="location">Location</InputLabel>
-                <Select
-                  id="location"
-                  label="location"
-                  name="location"
-                >
-                  <MenuItem value="">
-                    None
-                  </MenuItem>
-                  <ListSubheader>
-                    {hkIsland.district}
-                  </ListSubheader>
-                  {
-                    hkIsland.centres.map((centre) =>
-                      <MenuItem value={centre}>
-                        {centre}
-                      </MenuItem>
-                    )
-                  }
-
-                  <ListSubheader>
-                    {kowloon.district}
-                  </ListSubheader>
-                  {
-                    kowloon.centres.map((centre) =>
-                      <MenuItem value={centre}>
-                        {centre}
-                      </MenuItem>
-                    )
-                  }
-
-                  <ListSubheader>
-                    {newTerritories.district}
-                  </ListSubheader>
-                  {
-                    newTerritories.centres.map((centre) =>
-                      <MenuItem value={centre}>
-                        {centre}
-                      </MenuItem>
-                    )
-                  }
-                </Select>
-              </FormControl>
-              <Box>
+        <Container sx={{ py: 1 }} >
+          <Paper elevation={1} sx={{ p: 1 }}>
+            <Box component="form" noValidate onSubmit={handleSearch} >
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={1}
+              >
                 <FormControl>
-                  <FormLabel id="genderLabel">Gender</FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="genderLabel"
-                    name="gender"
-                  >
-                    <FormControlLabel value="f" control={<Radio />} label="Female" />
-                    <FormControlLabel value="m" control={<Radio />} label="Male" />
-                    <FormControlLabel value='' control={<Radio />} label="All" />
-                  </RadioGroup>
+                  <TextField id="id" name="id" label="ID" type="search"
+                    inputProps={{
+                      maxLength: 24,
+                      size: 24
+                    }}
+                  />
                 </FormControl>
-              </Box>
-              <Box>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{ mt: 1, mb: 2 }}
-                  startIcon={<SearchIcon />}
-                >
-                  Search
-                </Button>
-              </Box>
-              {isAllowAdd() && props.mode !== "mylist" &&
+                <FormControl>
+                  <TextField id="breed" name="breed" label="Breed" type="search" />
+                </FormControl>
+                <FormControl sx={{ minWidth: "120px" }} >
+                  <InputLabel htmlFor="location">Location</InputLabel>
+                  <Select
+                    id="location"
+                    label="location"
+                    name="location"
+                  >
+                    <MenuItem value="">
+                      None
+                    </MenuItem>
+                    <ListSubheader>
+                      {hkIsland.district}
+                    </ListSubheader>
+                    {
+                      hkIsland.centres.map((centre) =>
+                        <MenuItem value={centre}>
+                          {centre}
+                        </MenuItem>
+                      )
+                    }
+
+                    <ListSubheader>
+                      {kowloon.district}
+                    </ListSubheader>
+                    {
+                      kowloon.centres.map((centre) =>
+                        <MenuItem value={centre}>
+                          {centre}
+                        </MenuItem>
+                      )
+                    }
+
+                    <ListSubheader>
+                      {newTerritories.district}
+                    </ListSubheader>
+                    {
+                      newTerritories.centres.map((centre) =>
+                        <MenuItem value={centre}>
+                          {centre}
+                        </MenuItem>
+                      )
+                    }
+                  </Select>
+                </FormControl>
+                <Box>
+                  <FormControl>
+                    <FormLabel id="genderLabel">Gender</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="genderLabel"
+                      name="gender"
+                    >
+                      <FormControlLabel value="f" control={<Radio />} label="Female" />
+                      <FormControlLabel value="m" control={<Radio />} label="Male" />
+                      <FormControlLabel value='' control={<Radio />} label="All" />
+                    </RadioGroup>
+                  </FormControl>
+                </Box>
                 <Box>
                   <Button
-                    color="success"
+                    type="submit"
                     variant="contained"
                     sx={{ mt: 1, mb: 2 }}
-                    component={RouterLink}
-                    to="/dog/add"
-                    startIcon={<AddIcon />}
+                    startIcon={<SearchIcon />}
                   >
-                    Add
+                    Search
                   </Button>
                 </Box>
-              }
-            </Stack>
-          </Box>
+                {isAllowAdd() && props.mode !== "mylist" &&
+                  <Box>
+                    <Button
+                      color="success"
+                      variant="contained"
+                      sx={{ mt: 1, mb: 2 }}
+                      component={RouterLink}
+                      to="/dog/add"
+                      startIcon={<AddIcon />}
+                    >
+                      Add
+                    </Button>
+                  </Box>
+                }
+              </Stack>
+            </Box>
+          </Paper>
         </Container>
         <Container sx={{ py: 2 }} maxWidth="lg">
           {(dogList && dogList.length === 0) &&
@@ -269,9 +275,10 @@ export default function ListDog(props) {
                         :
                         "/image/default.jpg"
                     }
+                    height="300"
                   />
-                  <CardContent spacing={4} sx={{ flexGrow: 1 }}>
-                    <table cellPadding={0} style={{ width: "90%", marginLeft: 'auto', marginRight: 'auto' }}>
+                  <CardContent sx={{ flexGrow: 1, overflow: "auto" }}>
+                    <table cellPadding={0} style={{ width: "90%", marginLeft: 'auto', marginRight: 'auto' }} >
                       <thead>
                         <tr>
                           <td colSpan={2}>
@@ -331,44 +338,51 @@ export default function ListDog(props) {
                             <Typography>{dog.location}</Typography>
                           </td>
                         </tr>
-                        <tr>
-                          <td style={dogTD}>
-                            <Typography>Created:</Typography>
-                          </td>
-                          <td style={dogTD}>
-                            <Typography>{dog.addByName}</Typography>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                          </td>
-                          <td style={dogTD}>
-                            <Typography variant="subtitle2">
-                              {dateToString(dog.addTimestamp)}
-                            </Typography>
-                          </td>
-                        </tr>
                         {
-                          dog.editByName &&
+                          (user && user.role === "employee") &&
                           <>
                             <tr>
                               <td style={dogTD}>
-                                <Typography>Edited:</Typography>
+                                <Typography>Created:</Typography>
                               </td>
                               <td style={dogTD}>
-                                <Typography>{dog.editByName}</Typography>
+                                <Typography>{dog.addByName}</Typography>
                               </td>
-                            </tr>
-                            <tr>
+                            </tr><tr>
                               <td>
                               </td>
                               <td style={dogTD}>
-                                <Typography variant="subtitle2" >
-                                  {dateToString(dog.editTimestamp)}
+                                <Typography variant="subtitle2">
+                                  {dateToString(dog.addTimestamp)}
                                 </Typography>
                               </td>
                             </tr>
                           </>
+                        }
+                        {
+                          (user && user.role === "employee") &&
+                          (
+                            dog.editByName &&
+                            <>
+                              <tr>
+                                <td style={dogTD}>
+                                  <Typography>Edited:</Typography>
+                                </td>
+                                <td style={dogTD}>
+                                  <Typography>{dog.editByName}</Typography>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                </td>
+                                <td style={dogTD}>
+                                  <Typography variant="subtitle2" >
+                                    {dateToString(dog.editTimestamp)}
+                                  </Typography>
+                                </td>
+                              </tr>
+                            </>
+                          )
                         }
                       </tbody>
                     </table>
@@ -376,7 +390,12 @@ export default function ListDog(props) {
                   <CardActions>
                     {
                       dog.booked ?
-                        <Button disableRipple color="secondary" startIcon={<BlockIcon />}>
+                        <Button
+                          disableRipple
+                          size="small"
+                          color="secondary"
+                          startIcon={<BlockIcon />}
+                        >
                           Reserved
                         </Button>
                         :
@@ -403,21 +422,28 @@ export default function ListDog(props) {
                         </Button>
                       </>
                     }
-                    {
-                      user &&
-                      <IconButton
-                        onClick={() => {
-                          dog.bookmark ? handleUndoBookmarkDog(dog) : handleBookmarkDog(dog)
-                        }}
-                        style={{ marginLeft: "auto" }}
-                      >
-                        {dog.bookmark ?
-                          <BookmarkAddedIcon color="success" />
-                          :
-                          <BookmarkAddIcon color="primary" />
-                        }
-                      </IconButton>
-                    }
+                    <Box sx={{ marginLeft: "auto" }}>
+                      {
+                        user && user.role !== "employee" &&
+                        <IconButton>
+                          <QuestionAnswerIcon color="primary" />
+                        </IconButton>
+                      }
+                      {
+                        user &&
+                        <IconButton
+                          onClick={() => {
+                            dog.bookmark ? handleUndoBookmarkDog(dog) : handleBookmarkDog(dog)
+                          }}
+                        >
+                          {dog.bookmark ?
+                            <BookmarkAddedIcon color="success" />
+                            :
+                            <BookmarkAddIcon color="primary" />
+                          }
+                        </IconButton>
+                      }
+                    </Box>
                   </CardActions>
                 </Card>
               </Grid>
