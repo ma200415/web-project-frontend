@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,14 +10,19 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { signup } from '../helpers/WebAPI'
 
 const theme = createTheme();
 
 export default function Register() {
+  const [errorMessage, setErrorMessage] = useState({});
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -29,6 +35,17 @@ export default function Register() {
     };
 
     const result = await signup(signUpUser)
+
+    if (!result.success) {
+      setErrorMessage({ errorType: "error", message: result.message });
+      return;
+    }
+
+    navigate('/signin');
+  };
+
+  const handleSnackbarClose = () => {
+    setErrorMessage({})
   };
 
   return (
@@ -112,6 +129,15 @@ export default function Register() {
           </Box>
         </Box>
       </Container>
+      <Snackbar
+        open={errorMessage.errorType ? true : false}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert severity="error" sx={{ width: '100%' }}>
+          {errorMessage.message}
+        </MuiAlert>
+      </Snackbar>
     </ThemeProvider>
   );
 }
