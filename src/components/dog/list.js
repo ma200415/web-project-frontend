@@ -24,12 +24,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import BlockIcon from '@mui/icons-material/Block';
 import DeleteIcon from '@mui/icons-material/Delete';
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import ListSubheader from '@mui/material/ListSubheader';
+import Select from '@mui/material/Select';
 
 import { listDog, deleteDog, queryUser, bookedDog, bookmarkDog, unbookmarkDog } from '../../helpers/WebAPI'
-import { getDogAge, getGender, dateToString, getUserName, minMaxDateFormat } from '../../helpers/utils'
+import { getDogAge, getGender, dateToString, getUserName, hkIsland, kowloon, newTerritories } from '../../helpers/utils'
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -95,7 +100,8 @@ export default function ListDog(props) {
       name: data.get('name'),
       breed: data.get('breed'),
       birth: data.get('birth'),
-      gender: data.get('gender')
+      gender: data.get('gender'),
+      location: data.get("location")
     };
 
     retrieveDogs(dog)
@@ -154,6 +160,61 @@ export default function ListDog(props) {
                 InputProps={{ inputProps: { max: minMaxDateFormat(new Date()) } }}
               />
               <FormControl>
+                <TextField id="id" name="id" label="ID" type="search"
+                  inputProps={{
+                    maxLength: 24,
+                    size: 24
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <TextField id="breed" name="breed" label="Breed" type="search" />
+              </FormControl>
+              <FormControl sx={{ minWidth: "200px" }} >
+                <InputLabel htmlFor="location">Location</InputLabel>
+                <Select
+                  id="location"
+                  label="location"
+                  name="location"
+                >
+                  <MenuItem value="">
+                    None
+                  </MenuItem>
+                  <ListSubheader>
+                    {hkIsland.district}
+                  </ListSubheader>
+                  {
+                    hkIsland.centres.map((centre) =>
+                      <MenuItem value={centre}>
+                        {centre}
+                      </MenuItem>
+                    )
+                  }
+
+                  <ListSubheader>
+                    {kowloon.district}
+                  </ListSubheader>
+                  {
+                    kowloon.centres.map((centre) =>
+                      <MenuItem value={centre}>
+                        {centre}
+                      </MenuItem>
+                    )
+                  }
+
+                  <ListSubheader>
+                    {newTerritories.district}
+                  </ListSubheader>
+                  {
+                    newTerritories.centres.map((centre) =>
+                      <MenuItem value={centre}>
+                        {centre}
+                      </MenuItem>
+                    )
+                  }
+                </Select>
+              </FormControl>
+              <FormControl>
                 <FormLabel id="genderLabel">Gender</FormLabel>
                 <RadioGroup
                   row
@@ -195,7 +256,6 @@ export default function ListDog(props) {
               No records found
             </Typography>
           }
-
           <Grid container spacing={4}>
             {dogList.map((dog) => (
               <Grid item key={dog._id} xs={12} sm={6} md={4}>
@@ -212,7 +272,7 @@ export default function ListDog(props) {
                     }
                   />
                   <CardContent spacing={4} sx={{ flexGrow: 1 }}>
-                    <table cellPadding={0} style={{ width: "85%", marginLeft: 'auto', marginRight: 'auto' }}>
+                    <table cellPadding={0} style={{ width: "90%", marginLeft: 'auto', marginRight: 'auto' }}>
                       <thead>
                         <tr>
                           <td colSpan={2}>
@@ -223,6 +283,14 @@ export default function ListDog(props) {
                         </tr>
                       </thead>
                       <tbody>
+                        <tr>
+                          <td style={dogTD}>
+                            <Typography>ID:</Typography>
+                          </td>
+                          <td style={dogTD}>
+                            <Typography>{dog._id}</Typography>
+                          </td>
+                        </tr>
                         {
                           dog.gender &&
                           <tr>
@@ -234,15 +302,19 @@ export default function ListDog(props) {
                             </td>
                           </tr>
                         }
-                        <tr>
-                          <td style={dogTD}>
-                            <Typography>Breed:</Typography>
-                          </td>
-                          <td style={dogTD}>
-                            <Typography>{dog.breed}</Typography>
-                          </td>
-                        </tr>
-                        {dog.birth &&
+                        {
+                          dog.breed &&
+                          <tr>
+                            <td style={dogTD}>
+                              <Typography>Breed:</Typography>
+                            </td>
+                            <td style={dogTD}>
+                              <Typography>{dog.breed}</Typography>
+                            </td>
+                          </tr>
+                        }
+                        {
+                          dog.birth &&
                           <tr>
                             <td style={dogTD}>
                               <Typography>Birth:</Typography>
@@ -252,6 +324,14 @@ export default function ListDog(props) {
                             </td>
                           </tr>
                         }
+                        <tr>
+                          <td style={dogTD}>
+                            <Typography>Location:</Typography>
+                          </td>
+                          <td style={dogTD}>
+                            <Typography>{dog.location}</Typography>
+                          </td>
+                        </tr>
                         <tr>
                           <td style={dogTD}>
                             <Typography>Created:</Typography>

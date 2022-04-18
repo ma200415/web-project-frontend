@@ -34,3 +34,27 @@ export const dateToString = (date) => {
 export const minMaxDateFormat = (date) => {
     return date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, "0") + "-" + date.getDate().toString().padStart(2, "0")
 }
+
+export const hkIsland = {
+    district: "HONG KONG ISLAND",
+    centres: [
+        "Hong Kong Centre"
+    ]
+}
+
+export const kowloon = {
+    district: "KOWLOON",
+    centres: [
+        "Kowloon Centre",
+        "Mongkok Centre"
+    ]
+}
+
+export const newTerritories = {
+    district: "NEW TERRITORIES AND OUTLYING ISLANDS",
+    centres: [
+        "Sai Kung Centre",
+        "Hang Hau Centre",
+        "Mui Wo Centre"
+    ]
+}

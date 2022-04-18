@@ -62,6 +62,8 @@ export default function BookDog(props) {
     };
 
     const dogInfo = [
+        { name: "ID", value: location.state._id },
+        { name: "Location", value: location.state.location },
         { name: "Name", value: location.state.name },
         { name: "Gender", value: getGender(location.state.gender) },
         { name: "Breed", value: location.state.breed },

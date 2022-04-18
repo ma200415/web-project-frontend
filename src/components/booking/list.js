@@ -49,6 +49,14 @@ const headCells = [
     label: 'Date',
   },
   {
+    id: 'location',
+    label: 'Location',
+  },
+  {
+    id: 'id',
+    label: 'ID',
+  },
+  {
     id: 'dog',
     label: 'Dog',
   },
@@ -149,10 +157,14 @@ export default function ListBooking() {
   const retrieveBookings = async () => {
     const result = await listBooking()
 
+    const extraInfo = ["name", "location"]
+
     for (const element of result) {
       const dog = await queryDog({ id: element.dogId })
 
-      element.dogName = dog.name
+      extraInfo.forEach(el => {
+        element[el] = dog[el]
+      })
     }
 
     setBookingList(result)
@@ -212,12 +224,13 @@ export default function ListBooking() {
                         return (
                           <TableRow
                             hover
-                            onClick={(event) => handleClick(event, row.name)}
                             tabIndex={-1}
                             key={row._id}
                           >
                             <TableCell>{row.date}</TableCell>
-                            <TableCell>{row.dogName}</TableCell>
+                            <TableCell>{row.location}</TableCell>
+                            <TableCell>{row.dogId}</TableCell>
+                            <TableCell>{row.name}</TableCell>
                             <TableCell>{row.contact}</TableCell>
                             <TableCell>{row.remark}</TableCell>
                             <TableCell>{dateToString(row.submitTimestamp)}</TableCell>
