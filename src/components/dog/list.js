@@ -145,7 +145,7 @@ export default function ListDog(props) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <main>
-        <Container sx={{ py: 2 }} maxWidth="lg">
+        <Container sx={{ py: 2 }} maxWidth="xl">
           <Box component="form" noValidate onSubmit={handleSearch} sx={{ mt: 2 }}>
             <Stack
               direction="row"
@@ -164,7 +164,7 @@ export default function ListDog(props) {
               <FormControl>
                 <TextField id="breed" name="breed" label="Breed" type="search" />
               </FormControl>
-              <FormControl sx={{ minWidth: "200px" }} >
+              <FormControl sx={{ minWidth: "120px" }} >
                 <InputLabel htmlFor="location">Location</InputLabel>
                 <Select
                   id="location"
@@ -208,20 +208,21 @@ export default function ListDog(props) {
                   }
                 </Select>
               </FormControl>
-              <FormControl>
-                <FormLabel id="genderLabel">Gender</FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="genderLabel"
-                  name="gender"
-                >
-                  <FormControlLabel value="f" control={<Radio />} label="Female" />
-                  <FormControlLabel value="m" control={<Radio />} label="Male" />
-                  <FormControlLabel value='' control={<Radio />} label="All" />
-                </RadioGroup>
-              </FormControl>
-
-              <FormControl>
+              <Box>
+                <FormControl>
+                  <FormLabel id="genderLabel">Gender</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="genderLabel"
+                    name="gender"
+                  >
+                    <FormControlLabel value="f" control={<Radio />} label="Female" />
+                    <FormControlLabel value="m" control={<Radio />} label="Male" />
+                    <FormControlLabel value='' control={<Radio />} label="All" />
+                  </RadioGroup>
+                </FormControl>
+              </Box>
+              <Box>
                 <Button
                   type="submit"
                   variant="contained"
@@ -230,24 +231,24 @@ export default function ListDog(props) {
                 >
                   Search
                 </Button>
-              </FormControl>
+              </Box>
               {isAllowAdd() && props.mode !== "mylist" &&
-                <FormControl>
+                <Box>
                   <Button
                     color="success"
                     variant="contained"
                     sx={{ mt: 1, mb: 2 }}
-                    component={RouterLink} to="/dog/add"
+                    component={RouterLink}
+                    to="/dog/add"
                     startIcon={<AddIcon />}
                   >
                     Add
                   </Button>
-                </FormControl>
+                </Box>
               }
             </Stack>
           </Box>
         </Container>
-
         <Container sx={{ py: 2 }} maxWidth="lg">
           {(dogList && dogList.length === 0) &&
             <Typography variant="h6" textAlign={'center'}>
@@ -375,7 +376,7 @@ export default function ListDog(props) {
                   <CardActions>
                     {
                       dog.booked ?
-                        <Button color="secondary" startIcon={<BlockIcon />}>
+                        <Button disableRipple color="secondary" startIcon={<BlockIcon />}>
                           Reserved
                         </Button>
                         :

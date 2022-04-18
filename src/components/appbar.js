@@ -140,6 +140,7 @@ export default function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
+                (!page.auth || (page.auth && user)) &&
                 <MenuItem
                   key={page.name}
                   component={Link}
