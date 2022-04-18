@@ -57,11 +57,11 @@ export default function ListDog(props) {
   }, []);
 
   const isAllowAdd = () => {
-    return (user && user.admin ? true : false)
+    return (user && user.role === "employee" ? true : false)
   };
 
   const retrieveDogs = async (dog) => {
-    const currentUser = await queryUser({ id: user._id })
+    const currentUser = user ? await queryUser({ id: user._id }) : {}
 
     const dogs = await listDog(dog)
 

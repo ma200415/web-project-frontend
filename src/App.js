@@ -36,7 +36,7 @@ export default function App() {
     if (user != null) {
       switch (props.page) {
         case "dogAdd":
-          return user.admin ? <AddDog /> : "You do not have permission to access"
+          return user.role === "employee" ? <AddDog /> : "You do not have permission to access"
         case "dogEdit":
           return <EditDog />
         case "bookingBook":

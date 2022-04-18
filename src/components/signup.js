@@ -31,7 +31,8 @@ export default function Register() {
       lastName: data.get('lastName'),
       firstName: data.get('firstName'),
       email: data.get('email'),
-      password: data.get('password')
+      password: data.get('password'),
+      code: data.get('code'),
     };
 
     const result = await signup(signUpUser)
@@ -70,7 +71,7 @@ export default function Register() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="given-name"
+                  autoComplete="firstName"
                   name="firstName"
                   required
                   fullWidth
@@ -86,7 +87,7 @@ export default function Register() {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
-                  autoComplete="family-name"
+                  autoComplete="lastName"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -108,6 +109,14 @@ export default function Register() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  name="code"
+                  label="Code"
+                  id="code"
                 />
               </Grid>
             </Grid>
