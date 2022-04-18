@@ -28,7 +28,7 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import IconButton from '@mui/material/IconButton';
 
-import { listDog, deleteDog, queryUser, bookedDog, bookmarkDog } from '../../helpers/WebAPI'
+import { listDog, deleteDog, queryUser, bookedDog, bookmarkDog, unbookmarkDog } from '../../helpers/WebAPI'
 import { getDogAge, getGender, dateToString, getUserName } from '../../helpers/utils'
 
 import { Link as RouterLink } from 'react-router-dom';
@@ -58,6 +58,8 @@ export default function ListDog() {
   const retrieveDogs = async (dog) => {
     const result = await listDog(dog)
 
+    const currentUser = await queryUser({ id: user._id })
+
     for (const element of result) {
       const addByUser = await queryUser({ id: element.addBy })
       element.addByName = getUserName(addByUser.firstName, addByUser.lastName)
@@ -65,6 +67,13 @@ export default function ListDog() {
       if (element.editBy) {
         const editByUser = await queryUser({ id: element.editBy })
         element.editByName = getUserName(editByUser.firstName, editByUser.lastName)
+      }
+
+      const bookedDogs = await bookedDog({ dogId: element._id })
+      element.booked = bookedDogs.length > 0
+
+      if (currentUser.hasOwnProperty("bookmarks")) {
+        element.bookmark = currentUser.bookmarks.filter(bookmarkDog => bookmarkDog === element._id).length > 0
       }
     }
 
@@ -88,7 +97,23 @@ export default function ListDog() {
   const handleDeleteDog = async (dog) => {
     const result = await deleteDog(dog._id)
 
-    setAlert({ show: true, message: (result.success ? "Success" : result.message) })
+    setAlert({ show: true, type: (result.success ? "success" : "error"), message: (result.success ? "Deleted" : result.message) })
+
+    retrieveDogs()
+  }
+
+  const handleBookmarkDog = async (dog) => {
+    const result = await bookmarkDog(dog._id)
+
+    setAlert({ show: true, type: (result.success ? "success" : "error"), message: (result.success ? "Bookmarked" : result.message) })
+
+    retrieveDogs()
+  }
+
+  const handleUndoBookmarkDog = async (dog) => {
+    const result = await unbookmarkDog(dog._id)
+
+    setAlert({ show: true, type: (result.success ? "success" : "error"), message: (result.success ? "Unbookmarked" : result.message) })
 
     retrieveDogs()
   }
@@ -276,10 +301,13 @@ export default function ListDog() {
                               Delete
                             </Button>
                             <IconButton onClick={() => {
-                              handleBookmarkDog(dog);
+                              dog.bookmark ?
+                                handleUndoBookmarkDog(dog)
+                                :
+                                handleBookmarkDog(dog)
                             }}
                               style={{ marginLeft: "auto" }}>
-                              <BookmarkAddIcon color="primary" />
+                              <BookmarkAddIcon color={dog.bookmark ? "success" : "primary"} />
                             </IconButton>
                           </>
                       }
@@ -294,7 +322,7 @@ export default function ListDog() {
             autoHideDuration={6000}
             onClose={handleSnackbarClose}
           >
-            <MuiAlert severity={alert.message === "success" ? "success" : "error"} sx={{ width: '100%' }}>
+            <MuiAlert severity={alert.type} sx={{ width: '100%' }}>
               {alert.message}
             </MuiAlert>
           </Snackbar>
