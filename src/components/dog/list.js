@@ -34,6 +34,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import Select from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import SendIcon from '@mui/icons-material/Send';
 
 import { listDog, deleteDog, queryUser, bookedDog, bookmarkDog, unbookmarkDog } from '../../helpers/WebAPI'
 import { getDogAge, getGender, dateToString, getUserName, hkIsland, kowloon, newTerritories } from '../../helpers/utils'
@@ -42,6 +43,8 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import { useContext } from 'react';
 import { AuthContext } from "../../authContext"
+
+import FormDialog from '../formdialog';
 
 const theme = createTheme();
 
@@ -52,6 +55,7 @@ const dogTD = {
 export default function ListDog(props) {
   const [dogList, setDogList] = useState([]);
   const [alert, setAlert] = useState({});
+  const [dialog, setDialog] = useState(null);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -143,6 +147,23 @@ export default function ListDog(props) {
 
   const handleSnackbarClose = () => {
     setAlert({})
+  };
+
+  const handleMessage = () => {
+    setDialog({
+      title: "Leave us a message",
+      content: "Let us know what you are interested in",
+      actionYes: SendIcon,
+      actionNo: "Cancel"
+    })
+  };
+
+  const handleDialogClose = () => {
+    setDialog(null);
+  };
+
+  const handleDialogSend = () => {
+    console.log("sss")
   };
 
   return (
@@ -425,7 +446,9 @@ export default function ListDog(props) {
                     <Box sx={{ marginLeft: "auto" }}>
                       {
                         user && user.role !== "employee" &&
-                        <IconButton>
+                        <IconButton
+                          onClick={() => { handleMessage() }}
+                        >
                           <QuestionAnswerIcon color="primary" />
                         </IconButton>
                       }
@@ -458,8 +481,9 @@ export default function ListDog(props) {
               {alert.message}
             </MuiAlert>
           </Snackbar>
+          <FormDialog dialog={dialog} handleDialogClose={handleDialogClose} handleDialogSend={handleDialogSend} />
         </Container>
       </main>
-    </ThemeProvider >
+    </ThemeProvider>
   );
 }
