@@ -34,10 +34,26 @@ import ListSubheader from '@mui/material/ListSubheader';
 import Select from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import SendIcon from '@mui/icons-material/Send';
 
-import { listDog, deleteDog, queryUser, bookedDog, bookmarkDog, unbookmarkDog } from '../../helpers/WebAPI'
-import { getDogAge, getGender, dateToString, getUserName, hkIsland, kowloon, newTerritories } from '../../helpers/utils'
+import {
+  listDog,
+  deleteDog,
+  queryUser,
+  bookedDog,
+  bookmarkDog,
+  unbookmarkDog,
+  sendMessage
+} from '../../helpers/WebAPI'
+
+import {
+  getDogAge,
+  getGender,
+  dateToString,
+  getUserName,
+  hkIsland,
+  kowloon,
+  newTerritories
+} from '../../helpers/utils'
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -149,12 +165,11 @@ export default function ListDog(props) {
     setAlert({})
   };
 
-  const handleMessage = () => {
+  const handleMessage = (dog) => {
     setDialog({
       title: "Leave us a message",
       content: "Let us know what you are interested in",
-      actionYes: SendIcon,
-      actionNo: "Cancel"
+      dog: dog
     })
   };
 
@@ -162,8 +177,40 @@ export default function ListDog(props) {
     setDialog(null);
   };
 
-  const handleDialogSend = () => {
-    console.log("sss")
+  const handleDialogSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    try {
+      const message = {
+        message: data.get("message"),
+        dogId: dialog.dog._id,
+        userId: user._id
+      }
+
+      const result = await sendMessage(message)
+      console.log(result)
+      // if (!result) {
+      //   setErrorMessage({ errorType: "error", message: "Network error" });
+      //   return;
+      // }
+
+      // if (result.success && result.authToken) {
+      //   setAuthToken(result.authToken)
+
+      //   getDecodedAuthToken().then((result) => { //set JWT payload
+      //     if (result.success) {
+      //       setUser(result.payload);
+      //     }
+      //   });
+
+      //   navigate('/');
+      // } else {
+      //   setErrorMessage(result);
+      // }
+    } catch (error) {
+      // setErrorMessage({ errorType: "error", message: String(error) })
+    }
   };
 
   return (
@@ -447,7 +494,7 @@ export default function ListDog(props) {
                       {
                         user && user.role !== "employee" &&
                         <IconButton
-                          onClick={() => { handleMessage() }}
+                          onClick={() => { handleMessage(dog) }}
                         >
                           <QuestionAnswerIcon color="primary" />
                         </IconButton>
@@ -481,7 +528,7 @@ export default function ListDog(props) {
               {alert.message}
             </MuiAlert>
           </Snackbar>
-          <FormDialog dialog={dialog} handleDialogClose={handleDialogClose} handleDialogSend={handleDialogSend} />
+          <FormDialog dialog={dialog} handleDialogClose={handleDialogClose} handleDialogSubmit={handleDialogSubmit} />
         </Container>
       </main>
     </ThemeProvider>

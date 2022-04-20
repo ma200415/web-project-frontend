@@ -6,7 +6,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import SendIcon from '@mui/icons-material/Send';
-import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function FormDialog(props) {
     return (
@@ -23,16 +22,19 @@ export default function FormDialog(props) {
                     <DialogContentText sx={{ fontSize: 15 }}>
                         {props.dialog && props.dialog.content}
                     </DialogContentText>
-                    <TextField
-                        autoFocus
-                        fullWidth
-                        id="message"
-                        name="message"
-                        label="Message"
-                        multiline
-                        rows={4}
-                        sx={{ marginTop: 2 }}
-                    />
+                    <form id="form" onSubmit={props.handleDialogSubmit}>
+                        <TextField
+                            autoFocus
+                            fullWidth
+                            required
+                            id="message"
+                            name="message"
+                            label="Message"
+                            multiline
+                            rows={4}
+                            sx={{ marginTop: 2 }}
+                        />
+                    </form>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={props.handleDialogClose}>
@@ -42,7 +44,8 @@ export default function FormDialog(props) {
                         endIcon={<SendIcon />}
                         variant="contained"
                         color="success"
-                        onClick={props.handleDialogSend}
+                        type="submit"
+                        form="form"
                     >
                         Send
                     </Button>

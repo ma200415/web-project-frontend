@@ -200,3 +200,31 @@ export const bookedDog = async (data = {}) => {
         (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
     );
 };
+
+export const sendMessage = async (data = {}) => {
+    return await fetch(`${Config.BASE_URL}/message/add`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(data),
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
+export const listMessage = async () => {
+    return await fetch(`${Config.BASE_URL}/message`, {
+        method: "GET",
+        cache: 'no-cache',
+        headers: {
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};

@@ -7,6 +7,7 @@ import Home from './components/home'
 import SignIn from './components/signin'
 import AppBar from './components/appbar'
 import SignUp from './components/signup'
+import Message from './components/message'
 
 import ListDog from './components/dog/list'
 import AddDog from './components/dog/add'
@@ -45,6 +46,8 @@ export default function App() {
           return <ListBooking />
         case "mylist":
           return <ListDog mode="mylist" />
+        case "message":
+          return <Message />
         default:
           break;
       }
@@ -68,6 +71,7 @@ export default function App() {
           <Route path="/booking/book" element={<AuthEl page="bookingBook" />} />
           <Route path="/booking/list" element={<AuthEl page="bookingList" />} />
           <Route path="/mylist" element={<AuthEl page="mylist" />} />
+          <Route path="/message" element={<AuthEl page="message" />} />
         </Routes>
       </div>
     </AuthContext.Provider>

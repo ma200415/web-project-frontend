@@ -20,7 +20,8 @@ const pages = [
   { name: 'Home', to: '' },
   { name: 'Dog', to: '/dog/list' },
   { name: 'Booking', to: '/booking/list', auth: true },
-  { name: 'My List', to: '/mylist', auth: true }
+  { name: 'My List', to: '/mylist', auth: true },
+  { name: 'Message', to: '/message', auth: true }
 ];
 
 const guestSettings = [
