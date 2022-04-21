@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -35,6 +35,8 @@ import Select from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 import {
   listDog,
   deleteDog,
@@ -42,7 +44,8 @@ import {
   bookedDog,
   bookmarkDog,
   unbookmarkDog,
-  sendMessage
+  sendMessage,
+  listMessage
 } from '../../helpers/WebAPI'
 
 import {
@@ -55,9 +58,6 @@ import {
   newTerritories
 } from '../../helpers/utils'
 
-import { Link as RouterLink } from 'react-router-dom';
-
-import { useContext } from 'react';
 import { AuthContext } from "../../authContext"
 
 import FormDialog from '../formdialog';
@@ -73,6 +73,8 @@ export default function ListDog(props) {
   const [alert, setAlert] = useState({});
   const [dialog, setDialog] = useState(null);
   const { user } = useContext(AuthContext);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     retrieveDogs();
@@ -165,12 +167,20 @@ export default function ListDog(props) {
     setAlert({})
   };
 
-  const handleMessage = (dog) => {
-    setDialog({
-      title: "Leave us a message",
-      content: "Let us know what you are interested in",
-      dog: dog
-    })
+  const handleMessage = async (dog) => {
+    const message = await listMessage()
+
+    const messageHistory = message.filter(m => m.dogId === dog._id)
+
+    if (messageHistory && messageHistory.length > 0) {
+      navigate("/messager")
+    } else {
+      setDialog({
+        title: "Leave us a message",
+        content: "Let us know what you are interested in",
+        dog: dog
+      })
+    }
   };
 
   const handleDialogClose = () => {

@@ -30,7 +30,7 @@ export const signup = async (data = {}) => {
 };
 
 export const queryUser = async (data = {}) => {
-    return await fetch(`${Config.BASE_URL}/user/name`, {
+    return await fetch(`${Config.BASE_URL}/user/id`, {
         method: "POST",
         cache: 'no-cache',
         headers: {
@@ -44,13 +44,27 @@ export const queryUser = async (data = {}) => {
 };
 
 export const queryDog = async (data = {}) => {
-    return await fetch(`${Config.BASE_URL}/dog/name`, {
+    return await fetch(`${Config.BASE_URL}/dog/id`, {
         method: "POST",
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
+export const queryMessage = async (id = "") => {
+    return await fetch(`${Config.BASE_URL}/message/id`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id }),
     }).then(
         (res) => res.json(),
         (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
@@ -223,6 +237,21 @@ export const listMessage = async () => {
         headers: {
             'authorization': `Bearer ${getAuthToken()}`,
         },
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
+export const appendMessage = async (data = {}) => {
+    return await fetch(`${Config.BASE_URL}/message/append`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(data),
     }).then(
         (res) => res.json(),
         (error) => { process.env.NODE_ENV !== "production" && console.log(error) }

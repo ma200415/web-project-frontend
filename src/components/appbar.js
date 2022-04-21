@@ -21,7 +21,7 @@ const pages = [
   { name: 'Dog', to: '/dog/list' },
   { name: 'Booking', to: '/booking/list', auth: true },
   { name: 'My List', to: '/mylist', auth: true },
-  { name: 'Message', to: '/message', auth: true }
+  { name: 'Messager', to: '/messager', auth: true }
 ];
 
 const guestSettings = [
