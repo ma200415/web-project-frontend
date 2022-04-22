@@ -9,18 +9,34 @@ import './Compose.css';
 import { appendMessage } from '../../../helpers/WebAPI';
 
 export default function Compose(props) {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    setMessage("")
+  }, [props.conversation]);
+
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value);
+  };
+
   const handleSend = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
     try {
-      const message = {
-        messageId: props.message.messageId,
-        message: data.get("message")
+      const payload = {
+        messageId: props.conversation.messageId,
+        message: message
       }
 
-      const result = await appendMessage(message)
-      console.log(result)
+      const result = await appendMessage(payload)
+
+      if (result.success) {
+        setMessage("")
+
+        props.getConversation(props.conversation)
+      } else {
+        // setErrorMessage({ errorType: "error", message: String(error) })
+      }
     } catch (error) {
       // setErrorMessage({ errorType: "error", message: String(error) })
     }
@@ -39,6 +55,8 @@ export default function Compose(props) {
           placeholder='Type a message...'
           maxRows={4}
           fullWidth
+          value={message}
+          onChange={handleMessageChange}
         />
         <IconButton
           color="primary"

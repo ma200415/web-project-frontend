@@ -1,41 +1,20 @@
 import { useEffect, useState, useContext } from 'react';
 import Compose from '../Compose';
 import Toolbar from '../Toolbar';
-import ToolbarButton from '../ToolbarButton';
 import Message from '../Message';
 import moment from 'moment';
 
 import './MessageList.css';
 
 import { AuthContext } from "../../../authContext"
-import { queryMessage } from '../../../helpers/WebAPI';
 
 export default function MessageList(props) {
   const [messages, setMessages] = useState([])
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    getMessages();
+    setMessages(props.conversation)
   }, [props.conversation])
-
-  console.log("MessageList", props)
-  const getMessages = async () => {
-    if (!props.conversation.messageId) {
-      return
-    }
-
-    const message = await queryMessage(props.conversation.messageId)
-    console.log("getMessages", message)
-
-    const initMessage = [{
-      id: message._id,
-      author: message.userId,
-      message: message.message,
-      timestamp: new Date(message.createTimestamp).getTime()
-    }]
-
-    setMessages(initMessage)
-  }
 
   const renderMessages = () => {
     let i = 0;
@@ -102,23 +81,11 @@ export default function MessageList(props) {
         title={
           props.conversation.dog.name + " (" + props.conversation.dog._id + ")"
         }
-        rightItems={[
-          <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
-          <ToolbarButton key="video" icon="ion-ios-videocam" />,
-          <ToolbarButton key="phone" icon="ion-ios-call" />
-        ]}
       />
 
       <div className="message-list-container">{renderMessages()}</div>
 
-      <Compose rightItems={[
-        <ToolbarButton key="photo" icon="ion-ios-camera" />,
-        <ToolbarButton key="image" icon="ion-ios-image" />,
-        <ToolbarButton key="audio" icon="ion-ios-mic" />,
-        <ToolbarButton key="money" icon="ion-ios-card" />,
-        <ToolbarButton key="games" icon="ion-logo-game-controller-b" />,
-        <ToolbarButton key="emoji" icon="ion-ios-happy" />
-      ]} />
+      <Compose conversation={props.conversation} getConversation={props.getConversation} />
     </div>
   );
 }

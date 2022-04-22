@@ -12,7 +12,7 @@ export default function ConversationListItem(props) {
   const { _id, name, photo } = props.data.dog
 
   return (
-    <div className="conversation-list-item" onClick={() => props.handleConversationClick({ messageId: props.data._id, dog: props.data.dog })}>
+    <div className="conversation-list-item" onClick={() => props.getConversation({ messageId: props.data._id, dog: props.data.dog })}>
       <img
         className="conversation-photo"
         src={
