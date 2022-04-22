@@ -30,12 +30,6 @@ export default function ConversationList(props) {
     <div className="conversation-list">
       <Toolbar
         title="Messenger"
-        leftItems={[
-          <ToolbarButton key="cog" icon="ion-ios-cog" />
-        ]}
-        rightItems={[
-          <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
-        ]}
       />
       <ConversationSearch />
       {

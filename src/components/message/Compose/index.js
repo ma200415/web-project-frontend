@@ -51,9 +51,6 @@ export default function Compose(props) {
         >
           <SendIcon />
         </IconButton>
-        {
-          props.rightItems
-        }
       </div>
     </Box>
   );
