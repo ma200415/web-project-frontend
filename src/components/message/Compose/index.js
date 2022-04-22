@@ -1,4 +1,4 @@
-import { React, useContext } from 'react';
+import { React } from 'react';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import TextField from '@mui/material/TextField';
@@ -6,22 +6,17 @@ import Box from '@mui/material/Box';
 
 import './Compose.css';
 
-import { AuthContext } from "../../../authContext"
-
 import { appendMessage } from '../../../helpers/WebAPI';
 
 export default function Compose(props) {
-  const { user } = useContext(AuthContext);
-
   const handleSend = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     try {
       const message = {
-        messageId: "", //todo
-        message: data.get("message"),
-        userId: user._id
+        messageId: props.message.messageId,
+        message: data.get("message")
       }
 
       const result = await appendMessage(message)
