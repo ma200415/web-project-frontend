@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import ConversationSearch from '../ConversationSearch';
 import ConversationListItem from '../ConversationListItem';
 import Toolbar from '../Toolbar';
