@@ -3,7 +3,7 @@ import ConversationList from '../ConversationList';
 import MessageList from '../MessageList';
 import './Messenger.css';
 
-import { listMessage, queryDog, queryMessage } from "../../../helpers/WebAPI"
+import { listMessage, queryDog, queryUser } from "../../../helpers/WebAPI"
 
 export default function Messenger() {
   const [conversation, setConversation] = useState();
@@ -18,36 +18,17 @@ export default function Messenger() {
 
     for (const element of messages) {
       const dog = await queryDog({ id: element.dogId })
-
       element["dog"] = dog
+
+      const user = await queryUser({ id: element.userId })
+      element["user"] = user
     }
 
     setConversations(messages)
   }
 
-  const getConversation = async (data = {}) => {
-    const message = await queryMessage(data.messageId)
-
-    const initMessage = [{
-      author: message.userId,
-      message: message.message,
-      timestamp: new Date(message.createTimestamp).getTime()
-    }]
-
-    if (message.replys) {
-      message.replys.forEach(reply => {
-        initMessage.push({
-          author: reply.userId,
-          message: reply.message,
-          timestamp: new Date(reply.createTimestamp).getTime()
-        })
-      });
-    }
-
-    initMessage["messageId"] = data.messageId
-    initMessage["dog"] = data.dog
-
-    setConversation(initMessage)
+  const getConversation = async (prop = {}) => {
+    setConversation(prop)
   }
 
   return (

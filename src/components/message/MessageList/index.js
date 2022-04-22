@@ -7,13 +7,35 @@ import moment from 'moment';
 import './MessageList.css';
 
 import { AuthContext } from "../../../authContext"
+import { getUserName } from "../../../helpers/utils"
 
 export default function MessageList(props) {
   const [messages, setMessages] = useState([])
   const { user } = useContext(AuthContext);
 
+  const { conversation } = props.conversation
+
   useEffect(() => {
-    setMessages(props.conversation)
+    const initMessage = [{
+      author: conversation.userId,
+      message: conversation.message,
+      timestamp: new Date(conversation.createTimestamp).getTime()
+    }]
+
+    if (conversation.replys) {
+      conversation.replys.forEach(reply => {
+        initMessage.push({
+          author: reply.userId,
+          message: reply.message,
+          timestamp: new Date(reply.createTimestamp).getTime()
+        })
+      });
+    }
+
+    initMessage["dog"] = conversation.dog
+    initMessage["user"] = conversation.user
+
+    setMessages(initMessage)
   }, [props.conversation])
 
   const renderMessages = () => {
@@ -78,9 +100,8 @@ export default function MessageList(props) {
   return (
     <div className="message-list">
       <Toolbar
-        title={
-          props.conversation.dog.name + " (" + props.conversation.dog._id + ")"
-        }
+        upperTitle={getUserName(conversation.user.firstName, conversation.user.lastName)}
+        title={conversation.dog.name + " (" + conversation.dog._id + ")"}
       />
 
       <div className="message-list-container">{renderMessages()}</div>

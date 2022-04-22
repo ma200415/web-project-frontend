@@ -1,12 +1,16 @@
 import './Toolbar.css';
 
 export default function Toolbar(props) {
-  const { title } = props;
+  const { title, upperTitle } = props;
+
   return (
-    <div className="toolbar">
-      <div className="left-items"></div>
-      <h1 className="toolbar-title">{title}</h1>
-      <div className="right-items"></div>
+    <div>
+      <div className="toolbar-upperTitle">{upperTitle}</div>
+      <div className="toolbar">
+        <div className="left-items"></div>
+        <div className="toolbar-title">{title}</div>
+        <div className="right-items"></div>
+      </div>
     </div>
   );
 }
