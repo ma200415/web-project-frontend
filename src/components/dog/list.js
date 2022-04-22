@@ -200,6 +200,7 @@ export default function ListDog(props) {
 
       const result = await sendMessage(message)
       console.log(result)
+      //todo after action
       // if (!result) {
       //   setErrorMessage({ errorType: "error", message: "Network error" });
       //   return;

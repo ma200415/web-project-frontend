@@ -100,7 +100,10 @@ export default function MessageList(props) {
   return (
     <div className="message-list">
       <Toolbar
-        upperTitle={getUserName(conversation.user.firstName, conversation.user.lastName)}
+        upperTitle={
+          user.role === "employee" &&
+          getUserName(conversation.user.firstName, conversation.user.lastName)
+        }
         title={conversation.dog.name + " (" + conversation.dog._id + ")"}
       />
 

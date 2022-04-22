@@ -46,6 +46,7 @@ export default function Compose(props) {
     <Box component="form" onSubmit={handleSend}>
       <div className="compose">
         <TextField
+          autoFocus
           required
           multiline
           id="message"
