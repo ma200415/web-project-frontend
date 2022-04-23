@@ -72,6 +72,7 @@ export default function ListDog(props) {
   const [dogList, setDogList] = useState([]);
   const [alert, setAlert] = useState({});
   const [dialog, setDialog] = useState(null);
+  const [messageAlert, setMessageAlert] = useState({});
   const { user } = useContext(AuthContext);
 
   const navigate = useNavigate()
@@ -165,6 +166,7 @@ export default function ListDog(props) {
 
   const handleSnackbarClose = () => {
     setAlert({})
+    setMessageAlert({})
   };
 
   const handleMessage = async (dog) => {
@@ -199,28 +201,20 @@ export default function ListDog(props) {
       }
 
       const result = await sendMessage(message)
-      console.log(result)
-      //todo after action
-      // if (!result) {
-      //   setErrorMessage({ errorType: "error", message: "Network error" });
-      //   return;
-      // }
 
-      // if (result.success && result.authToken) {
-      //   setAuthToken(result.authToken)
+      handleDialogClose()
 
-      //   getDecodedAuthToken().then((result) => { //set JWT payload
-      //     if (result.success) {
-      //       setUser(result.payload);
-      //     }
-      //   });
-
-      //   navigate('/');
-      // } else {
-      //   setErrorMessage(result);
-      // }
+      setMessageAlert({
+        show: true,
+        type: result.success ? "success" : "error",
+        message: result.success ? "Thanks. We'll get back to you soon!" : result.message
+      });
     } catch (error) {
-      // setErrorMessage({ errorType: "error", message: String(error) })
+      setMessageAlert({
+        show: true,
+        type: "error",
+        message: String(error)
+      })
     }
   };
 
@@ -539,9 +533,19 @@ export default function ListDog(props) {
               {alert.message}
             </MuiAlert>
           </Snackbar>
+          <Snackbar
+            open={messageAlert.show}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+            anchorOrigin={{ "vertical": "top", "horizontal": 'center' }}
+          >
+            <MuiAlert severity={messageAlert.type} sx={{ width: '100%' }}>
+              {messageAlert.message}
+            </MuiAlert>
+          </Snackbar>
           <FormDialog dialog={dialog} handleDialogClose={handleDialogClose} handleDialogSubmit={handleDialogSubmit} />
         </Container>
       </main>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }

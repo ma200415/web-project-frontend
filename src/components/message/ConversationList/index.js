@@ -6,7 +6,8 @@ export default function ConversationList(props) {
   return (
     <div className="conversation-list">
       {
-        props.conversations && props.conversations.map(conversation =>
+        props.conversations &&
+        props.conversations.map(conversation =>
           <ConversationListItem
             key={conversation._id}
             conversation={conversation}
