@@ -13,17 +13,15 @@ export default function MessageList(props) {
   const [messages, setMessages] = useState([])
   const { user } = useContext(AuthContext);
 
-  const { conversation } = props.conversation
-
   useEffect(() => {
     const initMessage = [{
-      author: conversation.userId,
-      message: conversation.message,
-      timestamp: new Date(conversation.createTimestamp).getTime()
+      author: props.conversation.userId,
+      message: props.conversation.message,
+      timestamp: new Date(props.conversation.createTimestamp).getTime()
     }]
 
-    if (conversation.replys) {
-      conversation.replys.forEach(reply => {
+    if (props.conversation.replys) {
+      props.conversation.replys.forEach(reply => {
         initMessage.push({
           author: reply.userId,
           message: reply.message,
@@ -32,8 +30,8 @@ export default function MessageList(props) {
       });
     }
 
-    initMessage["dog"] = conversation.dog
-    initMessage["user"] = conversation.user
+    initMessage["dog"] = props.conversation.dog
+    initMessage["user"] = props.conversation.user
 
     setMessages(initMessage)
   }, [props.conversation])
@@ -102,9 +100,9 @@ export default function MessageList(props) {
       <Toolbar
         upperTitle={
           user.role === "employee" &&
-          getUserName(conversation.user.firstName, conversation.user.lastName)
+          getUserName(props.conversation.user.firstName, props.conversation.user.lastName)
         }
-        title={conversation.dog.name + " (" + conversation.dog._id + ")"}
+        title={props.conversation.dog.name + " (" + props.conversation.dog._id + ")"}
       />
 
       <div className="message-list-container">{renderMessages()}</div>

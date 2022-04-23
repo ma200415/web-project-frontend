@@ -57,6 +57,21 @@ export const queryDog = async (data = {}) => {
     );
 };
 
+export const queryMessage = async (data = {}) => {
+    return await fetch(`${Config.BASE_URL}/message/id`, {
+        method: "POST",
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(data),
+    }).then(
+        (res) => res.json(),
+        (error) => { process.env.NODE_ENV !== "production" && console.log(error) }
+    );
+};
+
 export const getDecodedAuthToken = async () => {
     return await fetch(`${Config.BASE_URL}/auth`, {
         method: "POST",

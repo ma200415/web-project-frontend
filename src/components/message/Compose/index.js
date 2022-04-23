@@ -24,7 +24,7 @@ export default function Compose(props) {
 
     try {
       const payload = {
-        messageId: props.conversation.messageId,
+        messageId: props.conversation._id,
         message: message
       }
 
@@ -33,12 +33,10 @@ export default function Compose(props) {
       if (result.success) {
         setMessage("")
 
-        props.getConversation(props.conversation)
-      } else {
-        // setErrorMessage({ errorType: "error", message: String(error) })
+        props.getConversation(props)
       }
     } catch (error) {
-      // setErrorMessage({ errorType: "error", message: String(error) })
+      console.log(error)
     }
   };
 
