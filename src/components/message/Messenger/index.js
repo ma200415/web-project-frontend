@@ -26,9 +26,12 @@ export default function Messenger() {
   const getConversation = async (prop = {}) => {
     const message = await queryMessage({ id: prop.conversation._id })
 
-    await appendUserAndDog(message)
+    if (message) {
+      await appendUserAndDog(message)
+    }
 
     setConversation(message)
+    getConversations()
   }
 
   const appendUserAndDog = async (message) => {

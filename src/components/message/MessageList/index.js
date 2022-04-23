@@ -79,12 +79,14 @@ export default function MessageList(props) {
 
       tempMessages.push(
         <Message
-          key={i}
+          index={i}
           isMine={isMine}
           startsSequence={startsSequence}
           endsSequence={endsSequence}
           showTimestamp={showTimestamp}
           data={current}
+          messageId={props.conversation._id}
+          getConversation={props.getConversation}
         />
       );
 

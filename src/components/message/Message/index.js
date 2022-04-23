@@ -1,9 +1,11 @@
 import { useContext, useState, useEffect } from 'react';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
 import moment from 'moment';
 import './Message.css';
 
 import { AuthContext } from "../../../authContext"
-import { queryUser } from "../../../helpers/WebAPI"
+import { queryUser, deleteMessage } from "../../../helpers/WebAPI"
 import { getUserName } from "../../../helpers/utils"
 
 export default function Message(props) {
@@ -15,7 +17,9 @@ export default function Message(props) {
     isMine,
     startsSequence,
     endsSequence,
-    showTimestamp
+    showTimestamp,
+    messageId,
+    index
   } = props;
 
   useEffect(() => {
@@ -31,6 +35,24 @@ export default function Message(props) {
       fetchUserName()
     }
   }, []);
+
+  const handleDeleteMessage = async (data) => {
+    try {
+      const payload = {
+        messageId: messageId,
+        message: data.message,
+        userId: data.author,
+        createTimestamp: data.timestamp,
+        index: index
+      }
+
+      const result = await deleteMessage(payload)
+
+      props.getConversation({ conversation: { _id: messageId } })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const friendlyTimestamp = moment(data.timestamp).format('LLLL');
   return (
@@ -56,6 +78,13 @@ export default function Message(props) {
               <hr />
             </div>
           }
+          {
+            user.role === "employee" &&
+            <IconButton disableRipple sx={{ padding: "0" }} size="small" onClick={() => handleDeleteMessage(data)}>
+              <ClearIcon fontSize="inherit" />
+            </IconButton>
+          }
+
           {data.message}
         </div>
       </div>
